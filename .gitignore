@@ -1,0 +1,39 @@
+# MacOS
+.DS_Store
+
+# IDEA
+.idea/**
+# Gradle with auto-import
+*.iml
+*.ipr
+
+# Properties
+project.properties
+local.properties
+
+# Android Studio Layout Inspector
+/captures/**
+
+# Gradle
+.gradle
+build
+
+# Gradle Profiler
+/gradle-user-home/*
+
+# Misc
+Manifest.java
+R.java
+build-scan-link.txt
+
+/bak
+/out
+*/out
+/gen
+/bin
+/true
+*/gen/*
+*/tmp/*
+*/builds/*
+*/classes/*
+**/gen/**
