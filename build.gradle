@@ -13,10 +13,16 @@ buildscript {
     }
 }
 
+plugins {
+    id 'com.stepango.androidjar' version "0.1"
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
 ext {
     dagger = '2.40.1'
+    targetSdkVersion = 31
+    androidJar = androidjar.find(targetSdkVersion)
 }

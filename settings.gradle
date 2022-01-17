@@ -8,3 +8,13 @@ dependencyResolutionManagement {
 }
 rootProject.name = "DailyPhotosDiary"
 include ':app'
+include ':di'
+include ':authorization-api'
+include ':authorization-impl'
+
+
+// Set a custom path for the modules.
+// This avoid to have empty modules in Android Studio.
+project(":di").projectDir = new File(rootDir, "core/di")
+project(":authorization-api").projectDir = new File(rootDir, "features/authorization/authorization-api")
+project(":authorization-impl").projectDir = new File(rootDir, "features/authorization/authorization-impl")

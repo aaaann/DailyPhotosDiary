@@ -1,6 +1,9 @@
 package com.annevonwolffen.dailyphotosdiary.di
 
 import android.content.Context
+import com.annevonwolffen.di.Dependency
+import com.annevonwolffen.di.FeatureInjector
+import com.annevonwolffen.di.FeaturesContainer
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton

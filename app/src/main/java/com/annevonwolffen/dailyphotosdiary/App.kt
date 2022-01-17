@@ -2,7 +2,7 @@ package com.annevonwolffen.dailyphotosdiary
 
 import android.app.Application
 import com.annevonwolffen.dailyphotosdiary.di.DaggerFeatureInjectorsComponent
-import com.annevonwolffen.dailyphotosdiary.di.FeaturesContainerImpl
+import com.annevonwolffen.di.FeaturesContainerImpl
 
 class App : Application() {
 
