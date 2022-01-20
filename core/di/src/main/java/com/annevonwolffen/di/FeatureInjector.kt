@@ -1,5 +1,5 @@
 package com.annevonwolffen.di
 
-interface FeatureInjector<T : com.annevonwolffen.di.Dependency> {
+interface FeatureInjector<T : Dependency> {
     fun getFeature(): T
 }

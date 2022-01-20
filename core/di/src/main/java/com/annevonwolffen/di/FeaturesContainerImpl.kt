@@ -1,18 +1,16 @@
 package com.annevonwolffen.di
 
-import java.lang.IllegalStateException
+class FeaturesContainerImpl : FeaturesContainer {
 
-class FeaturesContainerImpl : com.annevonwolffen.di.FeaturesContainer {
+    private var featureInjectors: Map<Class<out Dependency>, FeatureInjector<out Dependency>> = emptyMap()
 
-    private var featureInjectors: Map<Class<out com.annevonwolffen.di.Dependency>, com.annevonwolffen.di.FeatureInjector<com.annevonwolffen.di.Dependency>> = emptyMap()
-
-    override fun setFeatures(featureInjectors: Map<Class<out com.annevonwolffen.di.Dependency>, com.annevonwolffen.di.FeatureInjector<com.annevonwolffen.di.Dependency>>) {
+    override fun setFeatures(featureInjectors: Map<Class<out Dependency>, FeatureInjector<out Dependency>>) {
         this.featureInjectors = featureInjectors
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : com.annevonwolffen.di.Dependency> getFeature(featureKey: Class<T>): T {
-        return featureInjectors[featureKey] as T?
+    override fun <T : Dependency> getFeature(featureKey: Class<T>): T {
+        return featureInjectors[featureKey]?.getFeature() as T?
             ?: throw IllegalStateException("No dependency $featureKey in ${featureInjectors.keys}")
     }
 }

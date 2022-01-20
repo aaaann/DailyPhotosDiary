@@ -1,7 +1,7 @@
 package com.annevonwolffen.di
 
 interface FeaturesContainer {
-    fun setFeatures(featureInjectors: Map<Class<out com.annevonwolffen.di.Dependency>, com.annevonwolffen.di.FeatureInjector<com.annevonwolffen.di.Dependency>>)
+    fun setFeatures(featureInjectors: Map<Class<out Dependency>, FeatureInjector<out Dependency>>)
 
-    fun <T : com.annevonwolffen.di.Dependency> getFeature(featureKey: Class<T>): T
+    fun <T : Dependency> getFeature(featureKey: Class<T>): T
 }

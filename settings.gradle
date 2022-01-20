@@ -11,6 +11,8 @@ include ':app'
 include ':di'
 include ':authorization-api'
 include ':authorization-impl'
+include ':mainscreen-api'
+include ':mainscreen-impl'
 
 
 // Set a custom path for the modules.
@@ -18,3 +20,5 @@ include ':authorization-impl'
 project(":di").projectDir = new File(rootDir, "core/di")
 project(":authorization-api").projectDir = new File(rootDir, "features/authorization/authorization-api")
 project(":authorization-impl").projectDir = new File(rootDir, "features/authorization/authorization-impl")
+project(":mainscreen-api").projectDir = new File(rootDir, "features/mainscreen/mainscreen-api")
+project(":mainscreen-impl").projectDir = new File(rootDir, "features/mainscreen/mainscreen-impl")

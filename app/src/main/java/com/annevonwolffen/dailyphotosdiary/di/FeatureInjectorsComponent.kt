@@ -11,7 +11,7 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [FeatureInjectorsModule::class])
 interface FeatureInjectorsComponent {
-    val featureInjectors: Map<Class<out Dependency>, FeatureInjector<Dependency>>
+    val featureInjectors: Map<Class<out Dependency>, FeatureInjector<out Dependency>>
 
     @Component.Factory
     interface Factory {
