@@ -1,0 +1,11 @@
+<resources>
+
+    <style name="Theme.DailyPhotosDiary.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.DailyPhotosDiary.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.DailyPhotosDiary.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>
