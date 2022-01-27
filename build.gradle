@@ -27,4 +27,6 @@ ext {
     androidJar = androidjar.find(targetSdkVersion)
     dagger = '2.40.1'
     navigation = '2.3.5'
+    coroutines = '1.5.1'
+    lifecycle = '2.4.0'
 }
