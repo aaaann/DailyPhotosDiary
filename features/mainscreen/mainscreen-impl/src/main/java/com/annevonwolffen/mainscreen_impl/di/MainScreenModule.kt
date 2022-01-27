@@ -2,7 +2,7 @@ package com.annevonwolffen.mainscreen_impl.di
 
 import com.annevonwolffen.di.PerFeature
 import com.annevonwolffen.mainscreen_api.MainScreenRouter
-import com.annevonwolffen.mainscreen_impl.MainScreenRouterImpl
+import com.annevonwolffen.mainscreen_impl.presentation.MainScreenRouterImpl
 import dagger.Binds
 import dagger.Module
 
