@@ -4,7 +4,7 @@
 
     <application>
         <activity
-            android:name=".MainScreenActivity"
+            android:name=".presentation.MainScreenActivity"
             android:exported="false"
             android:label="@string/title_activity_main_screen"
             android:theme="@style/Theme.DailyPhotosDiary.NoActionBar" />

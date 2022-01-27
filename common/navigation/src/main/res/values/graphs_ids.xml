@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="authorization_graph" type="id" />
+    <item name="main_screen_graph" type="id" />
+    <item name="gallery_graph" type="id" />
+</resources>

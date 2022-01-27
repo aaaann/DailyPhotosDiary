@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DailyPhotosDiary">
         <activity
-            android:name=".presentation.SplashActivity"
+            android:name=".presentation.StartActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
