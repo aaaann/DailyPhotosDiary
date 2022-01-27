@@ -7,6 +7,6 @@ import javax.inject.Inject
 
 internal class AuthorizationScreenRouterImpl @Inject constructor() : AuthorizationScreenRouter {
     override fun openAuthorizationScreen(activity: Activity) {
-        activity.startActivity(Intent(activity, AuthorizationActivity::class.java))
+        // activity.startActivity(Intent(activity, AuthorizationActivity::class.java))
     }
 }

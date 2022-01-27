@@ -13,6 +13,8 @@ include ':authorization-api'
 include ':authorization-impl'
 include ':mainscreen-api'
 include ':mainscreen-impl'
+include ':navigation'
+include ':gallery-impl'
 
 
 // Set a custom path for the modules.
@@ -22,3 +24,5 @@ project(":authorization-api").projectDir = new File(rootDir, "features/authoriza
 project(":authorization-impl").projectDir = new File(rootDir, "features/authorization/authorization-impl")
 project(":mainscreen-api").projectDir = new File(rootDir, "features/mainscreen/mainscreen-api")
 project(":mainscreen-impl").projectDir = new File(rootDir, "features/mainscreen/mainscreen-impl")
+project(":navigation").projectDir = new File(rootDir, "common/navigation")
+project(":gallery-impl").projectDir = new File(rootDir, "features/gallery/gallery-impl")
