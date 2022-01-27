@@ -1,6 +1,8 @@
 package com.annevonwolffen.gallery_impl.domain
 
-class PhotosInteractorImpl : PhotosInteractor {
+import javax.inject.Inject
+
+class PhotosInteractorImpl @Inject constructor() : PhotosInteractor {
     override suspend fun loadPhotos(): List<Photo> {
         return listOf(
             Photo(
