@@ -12,8 +12,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.gallery_impl.databinding.FragmentGalleryBinding
-import com.annevonwolffen.gallery_impl.domain.PhotosInteractorImpl
+import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.GalleryViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -28,7 +29,7 @@ class GalleryFragment : Fragment() {
     private val viewModel: GalleryViewModel by activityViewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return GalleryViewModel(PhotosInteractorImpl()) as T // TODO: retrieve dependencies from DI
+                return GalleryViewModel(getFeature(GalleryInternalApi::class.java).photosInteractor) as T
             } // TODO: create base ViewModelProviderFactory in some core module
         }
     }
