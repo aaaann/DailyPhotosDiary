@@ -16,6 +16,7 @@ import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.gallery_impl.databinding.FragmentGalleryBinding
 import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.GalleryViewModel
+import com.annevonwolffen.ui_utils_api.UiUtilsApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -52,7 +53,7 @@ class GalleryFragment : Fragment() {
 
     private fun setupRecyclerView() {
         val recycler = binding.rvPhotos
-        adapter = PhotosListAdapter()
+        adapter = PhotosListAdapter(getFeature(UiUtilsApi::class.java).imageLoader)
         recycler.adapter = adapter
     }
 

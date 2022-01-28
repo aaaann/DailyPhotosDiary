@@ -15,6 +15,8 @@ include ':mainscreen-api'
 include ':mainscreen-impl'
 include ':navigation'
 include ':gallery-impl'
+include ':ui-utils-api'
+include ':ui-utils-impl'
 
 
 // Set a custom path for the modules.
@@ -26,3 +28,5 @@ project(":mainscreen-api").projectDir = new File(rootDir, "features/mainscreen/m
 project(":mainscreen-impl").projectDir = new File(rootDir, "features/mainscreen/mainscreen-impl")
 project(":navigation").projectDir = new File(rootDir, "common/navigation")
 project(":gallery-impl").projectDir = new File(rootDir, "features/gallery/gallery-impl")
+project(":ui-utils-api").projectDir = new File(rootDir, "core/ui-utils/ui-utils-api")
+project(":ui-utils-impl").projectDir = new File(rootDir, "core/ui-utils/ui-utils-impl")
