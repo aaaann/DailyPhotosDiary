@@ -36,7 +36,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:importantForAccessibility="no"
-        android:scaleType="centerCrop"
         android:src="@android:drawable/picture_frame"
         app:layout_constraintBottom_toTopOf="@id/tv_description"
         app:layout_constraintDimensionRatio="H,4:3"
