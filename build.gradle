@@ -30,4 +30,6 @@ ext {
     coroutines = '1.5.1'
     lifecycle = '2.4.0'
     glide = '4.11.0'
+    retrofit = '2.9.0'
+    loggingInterceptor = '4.2.1'
 }

@@ -17,6 +17,10 @@ include ':navigation'
 include ':gallery-impl'
 include ':ui-utils-api'
 include ':ui-utils-impl'
+include ':network-api'
+include ':network-impl'
+include ':coroutine-utils-api'
+include ':coroutine-utils-impl'
 
 
 // Set a custom path for the modules.
@@ -30,3 +34,7 @@ project(":navigation").projectDir = new File(rootDir, "common/navigation")
 project(":gallery-impl").projectDir = new File(rootDir, "features/gallery/gallery-impl")
 project(":ui-utils-api").projectDir = new File(rootDir, "core/ui-utils/ui-utils-api")
 project(":ui-utils-impl").projectDir = new File(rootDir, "core/ui-utils/ui-utils-impl")
+project(":network-api").projectDir = new File(rootDir, "core/network/network-api")
+project(":network-impl").projectDir = new File(rootDir, "core/network/network-impl")
+project(":coroutine-utils-api").projectDir = new File(rootDir, "core/coroutine-utils/coroutine-utils-api")
+project(":coroutine-utils-impl").projectDir = new File(rootDir, "core/coroutine-utils/coroutine-utils-impl")
