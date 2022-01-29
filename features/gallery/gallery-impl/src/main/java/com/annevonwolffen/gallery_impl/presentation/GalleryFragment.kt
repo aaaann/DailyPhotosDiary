@@ -12,11 +12,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.RecyclerView
 import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.gallery_impl.databinding.FragmentGalleryBinding
 import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
+import com.annevonwolffen.gallery_impl.domain.Photo
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.GalleryViewModel
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
+import com.annevonwolffen.ui_utils_api.extensions.setVisibility
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -26,6 +29,8 @@ class GalleryFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var adapter: PhotosListAdapter
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var errorBanner: View
 
     private val viewModel: GalleryViewModel by activityViewModels {
         object : ViewModelProvider.Factory {
@@ -46,26 +51,48 @@ class GalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initViews()
         setupRecyclerView()
         viewModel.loadPhotos()
         collectPhotos()
     }
 
+    private fun initViews() {
+        errorBanner = binding.errorBanner
+    }
+
     private fun setupRecyclerView() {
-        val recycler = binding.rvPhotos
+        recyclerView = binding.rvPhotos
         adapter = PhotosListAdapter(getFeature(UiUtilsApi::class.java).imageLoader)
-        recycler.adapter = adapter
+        recyclerView.adapter = adapter
     }
 
     private fun collectPhotos() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.photos.collect {
-                    when (it) {
-                        is Result.Success -> adapter.submitList(it.value)
-                        is Result.Error -> Log.w(TAG, "Ошибка при загрузке фото: ${it.errorMessage.orEmpty()}")
-                    }
-                }
+                viewModel.photos.collect { render(it) }
+            }
+        }
+    }
+
+    private fun render(state: State<List<Photo>>) {
+        Log.d(TAG, "Rendering: $state")
+        when (state) {
+            is State.Loading -> {
+                errorBanner.setVisibility(false)
+                recyclerView.setVisibility(false)
+                // TODO: set shimmers visibility to true
+            }
+            is State.Success -> {
+                errorBanner.setVisibility(false)
+                recyclerView.setVisibility(true)
+                adapter.submitList(state.value)
+                // TODO: set shimmers visibility to false
+            }
+            is State.Error -> {
+                errorBanner.setVisibility(true)
+                recyclerView.setVisibility(false)
+                // TODO: set shimmers visibility to false
             }
         }
     }
