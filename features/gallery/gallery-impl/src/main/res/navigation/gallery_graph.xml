@@ -28,10 +28,19 @@
         android:label="{toolbar_title}"
         tools:layout="@layout/fragment_add_image">
 
+        <action
+            android:id="@+id/action_toAddImageBottomSheet"
+            app:destination="@id/add_image_bottomsheet" />
+
         <argument
             android:name="toolbar_title"
             app:argType="string" />
 
     </fragment>
+
+    <dialog
+        android:id="@+id/add_image_bottomsheet"
+        android:name="com.annevonwolffen.gallery_impl.presentation.AddImageBottomSheet"
+        tools:layout="@layout/bottomsheet_add_image" />
 
 </navigation>
