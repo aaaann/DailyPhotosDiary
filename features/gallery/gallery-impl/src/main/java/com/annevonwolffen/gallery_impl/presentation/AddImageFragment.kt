@@ -3,10 +3,9 @@ package com.annevonwolffen.gallery_impl.presentation
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,11 +14,9 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.cardview.widget.CardView
-import androidx.core.graphics.decodeBitmap
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -29,22 +26,21 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.annevonwolffen.di.FeatureProvider
 import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.gallery_impl.R
 import com.annevonwolffen.gallery_impl.databinding.FragmentAddImageBinding
 import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
 import com.annevonwolffen.gallery_impl.domain.UploadImage
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.AddImageViewModel
-import com.annevonwolffen.gallery_impl.presentation.viewmodels.GalleryViewModel
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
-import com.annevonwolffen.ui_utils_api.extensions.setVisibility
 import com.annevonwolffen.ui_utils_api.image.ImageLoader
 import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class AddImageFragment : Fragment() {
 
@@ -68,7 +64,10 @@ class AddImageFragment : Fragment() {
 
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            result.data?.data.also { viewModel.setUri(it) }
+            imageUri?.let { viewModel.setUri(it) }
+            // result.data?.data.also { viewModel.setUri(it) }
+            // val file = getTempFile()
+            // result.data?.data.also { viewModel.setUri(Uri.fromFile(file)) }
         }
     }
 
@@ -96,8 +95,7 @@ class AddImageFragment : Fragment() {
 
         val addImageButton = binding.btnImage
         addImageButton.setOnClickListener {
-            selectImageGallery()
-            // TODO: open bottomsheet
+            findNavController().navigate(AddImageFragmentDirections.actionToAddImageBottomSheet())
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -117,9 +115,39 @@ class AddImageFragment : Fragment() {
         }
     }
 
-    private fun selectImageGallery() {
+    private fun selectImageFromGallery() {
         val pickImageIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         resultLauncher.launch(pickImageIntent)
+    }
+
+    private fun takePhotoFromCamera() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePhotoIntent ->
+            takePhotoIntent.resolveActivity(requireActivity().packageManager)?.also {
+                val photoFile: File? =
+                    kotlin.runCatching { createImageFile() }.onFailure { Log.d(TAG, "Ошибка при создании файла.") }
+                        .getOrNull()
+                photoFile?.also {
+                    val photoURI: Uri = FileProvider.getUriForFile(
+                        requireContext(),
+                        "com.annevonwolffen.fileprovider",
+                        it
+                    )
+                    imageUri = photoURI
+                    takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    resultLauncher.launch(takePhotoIntent)
+                }
+            }
+        }
+    }
+
+    private fun createImageFile(): File {
+        val timeStamp: String = SimpleDateFormat.getDateTimeInstance().format(Date())
+        val storageDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+            "DailyPhotosDiary_${timeStamp}_",
+            ".jpg",
+            storageDir
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -162,5 +190,9 @@ class AddImageFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private companion object {
+        const val TAG = "AddImageFragment"
     }
 }
