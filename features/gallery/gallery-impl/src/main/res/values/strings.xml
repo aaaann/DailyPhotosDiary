@@ -6,4 +6,6 @@
     <string name="add_image_descr">Описание…</string>
     <string name="add_image_title">Добавить картинку</string>
     <string name="save">Сохранить</string>
+    <string name="from_camera">Камера</string>
+    <string name="from_gallery">Галерея</string>
 </resources>
