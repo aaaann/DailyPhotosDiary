@@ -12,14 +12,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.annevonwolffen.di.FeatureProvider.getFeature
+import com.annevonwolffen.gallery_impl.R
 import com.annevonwolffen.gallery_impl.databinding.FragmentGalleryBinding
 import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
 import com.annevonwolffen.gallery_impl.domain.Photo
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.GalleryViewModel
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
 import com.annevonwolffen.ui_utils_api.extensions.setVisibility
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -31,6 +34,7 @@ class GalleryFragment : Fragment() {
     private lateinit var adapter: PhotosListAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var errorBanner: View
+    private lateinit var addImageButton: FloatingActionButton
 
     private val viewModel: GalleryViewModel by activityViewModels {
         object : ViewModelProvider.Factory {
@@ -59,6 +63,14 @@ class GalleryFragment : Fragment() {
 
     private fun initViews() {
         errorBanner = binding.errorBanner
+        addImageButton = binding.btnAddImage
+        addImageButton.setOnClickListener {
+            findNavController().navigate(
+                GalleryFragmentDirections.actionToAddImage(
+                    resources.getString(R.string.add_image_title)
+                )
+            )
+        }
     }
 
     private fun setupRecyclerView() {

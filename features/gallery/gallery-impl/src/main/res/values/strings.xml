@@ -3,4 +3,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="reload">Попробовать снова</string>
     <string name="loading_error">Не удалось загрузить картинки</string>
+    <string name="add_image_descr">Описание…</string>
+    <string name="add_image_title">Добавить картинку</string>
+    <string name="save">Сохранить</string>
 </resources>
