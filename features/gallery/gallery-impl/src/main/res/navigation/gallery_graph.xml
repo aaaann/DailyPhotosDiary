@@ -9,6 +9,29 @@
         android:id="@+id/gallery_fragment"
         android:name="com.annevonwolffen.gallery_impl.presentation.GalleryFragment"
         android:label="Дневник"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_gallery">
+
+        <action
+            android:id="@+id/action_toAddImage"
+            app:destination="@id/add_image_fragment">
+
+            <argument
+                android:name="toolbar_title"
+                app:argType="string" />
+
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/add_image_fragment"
+        android:name="com.annevonwolffen.gallery_impl.presentation.AddImageFragment"
+        android:label="{toolbar_title}"
+        tools:layout="@layout/fragment_add_image">
+
+        <argument
+            android:name="toolbar_title"
+            app:argType="string" />
+
+    </fragment>
 
 </navigation>
