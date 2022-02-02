@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout style="@style/Widget.BottomSheet"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:paddingBottom="10dp"
     android:paddingHorizontal="16dp"
-    android:paddingTop="20dp"
-    android:paddingBottom="10dp">
+    android:paddingTop="20dp">
 
     <TextView
         android:id="@+id/from_camera"

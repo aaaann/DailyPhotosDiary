@@ -18,10 +18,12 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -35,7 +37,11 @@ import com.annevonwolffen.gallery_impl.presentation.viewmodels.AddImageViewModel
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
 import com.annevonwolffen.ui_utils_api.image.ImageLoader
 import com.google.android.material.imageview.ShapeableImageView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -47,7 +53,7 @@ class AddImageFragment : Fragment() {
     private var _binding: FragmentAddImageBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: AddImageViewModel by viewModels {
+    private val viewModel: AddImageViewModel by activityViewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return AddImageViewModel(getFeature(GalleryInternalApi::class.java).photosInteractor) as T
@@ -64,10 +70,9 @@ class AddImageFragment : Fragment() {
 
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            imageUri?.let { viewModel.setUri(it) }
-            // result.data?.data.also { viewModel.setUri(it) }
-            // val file = getTempFile()
-            // result.data?.data.also { viewModel.setUri(Uri.fromFile(file)) }
+            // imageUri?.let { viewModel.setUri(it) }
+            result.data?.data.also { viewModel.uri = it }
+            updateAddedImage()
         }
     }
 
@@ -80,27 +85,33 @@ class AddImageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
+        collectFlows()
     }
 
     private fun initViews() {
         addedImage = binding.ivAddedImage
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uriFlow.collect {
-                    imageUri = it
-                    imageLoader.loadImage(addedImage, it)
-                }
-            }
-        }
+        updateAddedImage()
 
         val addImageButton = binding.btnImage
         addImageButton.setOnClickListener {
             findNavController().navigate(AddImageFragmentDirections.actionToAddImageBottomSheet())
         }
+    }
 
+    private fun updateAddedImage() {
+        viewModel.file?.let { imageLoader.loadImage(addedImage, it) }
+            ?: viewModel.uri?.let { imageLoader.loadImage(addedImage, it) }
+    }
+
+    private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uploadedImageFlow.collect {
+                // launchFlowCollection(viewModel.uriFlow) {
+                //     imageUri = it
+                //     imageLoader.loadImage(addedImage, it)
+                // }
+
+                launchFlowCollection(viewModel.uploadedImageFlow) {
                     when (it) {
                         is State.Success -> it.value.takeIf { images -> images.isNotEmpty() }
                             ?.let { findNavController().popBackStack() }
@@ -111,7 +122,20 @@ class AddImageFragment : Fragment() {
                         ).show()
                     }
                 }
+
+                launchFlowCollection(viewModel.addImageEvent) { addImageCommand ->
+                    when (addImageCommand) {
+                        is AddImageBottomSheet.AddImage.FromCamera -> takePhotoFromCamera()
+                        is AddImageBottomSheet.AddImage.FromGallery -> selectImageFromGallery()
+                    }
+                }
             }
+        }
+    }
+
+    private fun <T> CoroutineScope.launchFlowCollection(flow: Flow<T>, action: (T) -> Unit) {
+        launch {
+            flow.collect { value -> action.invoke(value) }
         }
     }
 
@@ -132,7 +156,7 @@ class AddImageFragment : Fragment() {
                         "com.annevonwolffen.fileprovider",
                         it
                     )
-                    imageUri = photoURI
+                    viewModel.file = it
                     takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
                     resultLauncher.launch(takePhotoIntent)
                 }
@@ -156,15 +180,15 @@ class AddImageFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.save) {
-            imageUri?.let {
-                viewModel.saveImage(UploadImage(file = createFileFromUri(it)))
+            viewModel.takeIf { it.file != null || it.uri != null }?.let {
+                it.saveImage(UploadImage(file = it.file ?: createFileFromUri(it.uri!!)))
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
     private fun createFileFromUri(uri: Uri): File {
-        val outputFile = getTempFile()
+        val outputFile = createImageFile()
         val inputStream = requireActivity().contentResolver.openInputStream(uri)
         inputStream?.use { input ->
             val outputStream = FileOutputStream(outputFile)
