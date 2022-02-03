@@ -8,5 +8,5 @@ import java.io.File
 interface ImageLoader {
     fun loadImage(view: ImageView, url: String, @DrawableRes placeHolder: Int? = null)
     fun loadImage(view: ImageView, uri: Uri?)
-    fun loadImage(view: ImageView, file: File)
+    fun loadImage(view: ImageView, file: File?)
 }
