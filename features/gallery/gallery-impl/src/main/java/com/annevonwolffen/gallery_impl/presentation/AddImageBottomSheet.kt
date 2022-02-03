@@ -7,12 +7,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.annevonwolffen.di.FeatureProvider
 import com.annevonwolffen.gallery_impl.R
 import com.annevonwolffen.gallery_impl.databinding.BottomsheetAddImageBinding
 import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.AddImageViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class AddImageBottomSheet : BottomSheetDialogFragment() {
 
@@ -34,14 +38,24 @@ class AddImageBottomSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setUpItemsClick()
+        observerDismissEvents()
+    }
+
+    private fun setUpItemsClick() {
         binding.fromCamera.setOnClickListener {
             viewModel.addImage(AddImage.FromCamera)
-            dismiss()
         }
         binding.fromGallery.setOnClickListener {
             viewModel.addImage(AddImage.FromGallery)
-            dismiss()
         }
+    }
+
+    private fun observerDismissEvents() {
+        viewModel.dismissBottomSheetEvent
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { dismiss() }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun getTheme(): Int {
