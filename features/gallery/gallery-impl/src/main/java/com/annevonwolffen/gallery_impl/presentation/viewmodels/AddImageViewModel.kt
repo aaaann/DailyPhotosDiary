@@ -1,6 +1,5 @@
 package com.annevonwolffen.gallery_impl.presentation.viewmodels
 
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,12 +20,8 @@ import java.io.File
 
 class AddImageViewModel(private val imagesInteractor: PhotosInteractor) : ViewModel() {
 
-    val uriFlow: StateFlow<Uri?>
-        get() = _uriFlow
-    private val _uriFlow: MutableStateFlow<Uri?> = MutableStateFlow(null)
-
-    var file: File? = null
-    var uri: Uri? = null
+    val fileFlow: StateFlow<File?> get() = _fileFlow
+    private val _fileFlow: MutableStateFlow<File?> = MutableStateFlow(null)
 
     val uploadedImageFlow get() = _uploadedImageFlow.receiveAsFlow()
     private val _uploadedImageFlow = Channel<State<List<Photo>>>(CONFLATED)
@@ -34,13 +29,16 @@ class AddImageViewModel(private val imagesInteractor: PhotosInteractor) : ViewMo
     val addImageEvent get() = _addImageEvent.receiveAsFlow()
     private val _addImageEvent = Channel<AddImage>(CONFLATED)
 
+    val dismissBottomSheetEvent get() = _dismissBottomSheetEvent.receiveAsFlow()
+    private val _dismissBottomSheetEvent = Channel<Unit>(CONFLATED)
+
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         Log.w(TAG, "Ошибка при загрузке картинок: $throwable")
     }
 
-    // fun setUri(uri: Uri?) {
-    //     _uriFlow.value = uri
-    // }
+    fun setFile(file: File?) {
+        _fileFlow.value = file
+    }
 
     fun saveImage(image: UploadImage) {
         viewModelScope.launch(exceptionHandler) {
@@ -57,6 +55,10 @@ class AddImageViewModel(private val imagesInteractor: PhotosInteractor) : ViewMo
 
     fun addImage(addImageCommand: AddImage) {
         viewModelScope.launch { _addImageEvent.send(addImageCommand) }
+    }
+
+    fun dismissBottomSheet() {
+        viewModelScope.launch { _dismissBottomSheetEvent.send(Unit) }
     }
 
     private companion object {

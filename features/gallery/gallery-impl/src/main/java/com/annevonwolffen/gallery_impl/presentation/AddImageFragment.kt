@@ -2,7 +2,6 @@ package com.annevonwolffen.gallery_impl.presentation
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -19,11 +18,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -40,8 +37,6 @@ import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -66,13 +61,11 @@ class AddImageFragment : Fragment() {
     private val imageLoader: ImageLoader by lazy { getFeature(UiUtilsApi::class.java).imageLoader }
 
     private lateinit var addedImage: ShapeableImageView
-    private var imageUri: Uri? = null
 
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            // imageUri?.let { viewModel.setUri(it) }
-            result.data?.data.also { viewModel.uri = it }
-            updateAddedImage()
+            result.data?.data?.also { viewModel.setFile(createFileFromUri(it)) }
+            viewModel.dismissBottomSheet()
         }
     }
 
@@ -90,7 +83,6 @@ class AddImageFragment : Fragment() {
 
     private fun initViews() {
         addedImage = binding.ivAddedImage
-        updateAddedImage()
 
         val addImageButton = binding.btnImage
         addImageButton.setOnClickListener {
@@ -98,23 +90,33 @@ class AddImageFragment : Fragment() {
         }
     }
 
-    private fun updateAddedImage() {
-        viewModel.file?.let { imageLoader.loadImage(addedImage, it) }
-            ?: viewModel.uri?.let { imageLoader.loadImage(addedImage, it) }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_add_image, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.save) {
+            viewModel.fileFlow.value?.let {
+                viewModel.saveImage(UploadImage(file = it))
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                // launchFlowCollection(viewModel.uriFlow) {
-                //     imageUri = it
-                //     imageLoader.loadImage(addedImage, it)
-                // }
+                launchFlowCollection(viewModel.fileFlow) {
+                    imageLoader.loadImage(addedImage, it)
+                }
 
                 launchFlowCollection(viewModel.uploadedImageFlow) {
                     when (it) {
                         is State.Success -> it.value.takeIf { images -> images.isNotEmpty() }
-                            ?.let { findNavController().popBackStack() }
+                            ?.let {
+                                findNavController().popBackStack()
+                                viewModel.setFile(null)
+                            }
                         is State.Error -> Toast.makeText(
                             activity,
                             "Ошибка при загрузке картинки: ${it.errorMessage}",
@@ -133,12 +135,6 @@ class AddImageFragment : Fragment() {
         }
     }
 
-    private fun <T> CoroutineScope.launchFlowCollection(flow: Flow<T>, action: (T) -> Unit) {
-        launch {
-            flow.collect { value -> action.invoke(value) }
-        }
-    }
-
     private fun selectImageFromGallery() {
         val pickImageIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         resultLauncher.launch(pickImageIntent)
@@ -148,7 +144,8 @@ class AddImageFragment : Fragment() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePhotoIntent ->
             takePhotoIntent.resolveActivity(requireActivity().packageManager)?.also {
                 val photoFile: File? =
-                    kotlin.runCatching { createImageFile() }.onFailure { Log.d(TAG, "Ошибка при создании файла.") }
+                    kotlin.runCatching { createImageFile() }
+                        .onFailure { Log.d(TAG, "Ошибка при создании файла.") }
                         .getOrNull()
                 photoFile?.also {
                     val photoURI: Uri = FileProvider.getUriForFile(
@@ -156,7 +153,7 @@ class AddImageFragment : Fragment() {
                         "com.annevonwolffen.fileprovider",
                         it
                     )
-                    viewModel.file = it
+                    viewModel.setFile(it)
                     takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
                     resultLauncher.launch(takePhotoIntent)
                 }
@@ -172,19 +169,6 @@ class AddImageFragment : Fragment() {
             ".jpg",
             storageDir
         )
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_add_image, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.save) {
-            viewModel.takeIf { it.file != null || it.uri != null }?.let {
-                it.saveImage(UploadImage(file = it.file ?: createFileFromUri(it.uri!!)))
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun createFileFromUri(uri: Uri): File {
@@ -205,15 +189,15 @@ class AddImageFragment : Fragment() {
         return outputFile
     }
 
-    private fun getTempFile(): File {
-        val imageFile = File(context?.externalCacheDir, "temp_file")
-        imageFile.parentFile?.mkdirs()
-        return imageFile
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun <T> CoroutineScope.launchFlowCollection(flow: Flow<T>, action: (T) -> Unit) {
+        launch {
+            flow.collect { value -> action.invoke(value) }
+        }
     }
 
     private companion object {

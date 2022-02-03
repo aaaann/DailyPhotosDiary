@@ -32,7 +32,7 @@ class GlideImageLoader @Inject constructor() : ImageLoader {
             .into(view)
     }
 
-    override fun loadImage(view: ImageView, file: File) {
+    override fun loadImage(view: ImageView, file: File?) {
         Glide.with(view)
             .load(file)
             .centerCrop()
