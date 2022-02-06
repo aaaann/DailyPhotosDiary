@@ -10,4 +10,4 @@ class ImageServerModel(
     val url: String
 )
 
-fun ImageServerModel.toDomain() = Photo(0L, name, "", createdAt, url)
+fun ImageServerModel.toDomain() = Photo("", name, "", createdAt, url)

@@ -1,5 +1,6 @@
 package com.annevonwolffen.gallery_impl.presentation
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.gallery_impl.R
+import com.annevonwolffen.gallery_impl.data.remote.firebase.Image
 import com.annevonwolffen.gallery_impl.databinding.FragmentGalleryBinding
 import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
 import com.annevonwolffen.gallery_impl.domain.Photo
@@ -23,6 +25,15 @@ import com.annevonwolffen.gallery_impl.presentation.viewmodels.GalleryViewModel
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
 import com.annevonwolffen.ui_utils_api.extensions.setVisibility
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
+import com.google.firebase.storage.ktx.component1
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -57,7 +68,8 @@ class GalleryFragment : Fragment() {
 
         initViews()
         setupRecyclerView()
-        viewModel.loadPhotos()
+        // viewModel.loadPhotos()
+        listenForImages()
         collectPhotos()
     }
 
@@ -77,6 +89,37 @@ class GalleryFragment : Fragment() {
         recyclerView = binding.rvPhotos
         adapter = PhotosListAdapter(getFeature(UiUtilsApi::class.java).imageLoader)
         recyclerView.adapter = adapter
+    }
+
+    private fun listenForImages() {
+        val dbReference = Firebase.database.reference
+            .child("dailyphotosdiary")
+            .child(Firebase.auth.currentUser?.uid.orEmpty())
+            .child("testfolder")
+
+        dbReference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                Log.d(TAG, "onDataChange: ${dataSnapshot.children.map { "${it.key}" }}")
+                val photos: List<Photo> = dataSnapshot.children
+                    .map {
+                        val key = it.key
+                        val image = it.getValue(Image::class.java)
+                        Photo(
+                            key.orEmpty(),
+                            image?.name.orEmpty(),
+                            image?.description.orEmpty(),
+                            image?.createdAt.orEmpty(),
+                            image?.url.orEmpty()
+                        )
+                    }
+                render(State.Success(photos))
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.w(TAG, "Ошибка при выгрузке картинок из Firebase Database: ", databaseError.toException())
+                render(State.Error(databaseError.toException().message))
+            }
+        })
     }
 
     private fun collectPhotos() {

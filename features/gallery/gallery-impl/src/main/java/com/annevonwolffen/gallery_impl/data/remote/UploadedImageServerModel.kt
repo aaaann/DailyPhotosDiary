@@ -8,4 +8,4 @@ class UploadedImageServerModel(
     val createdAtUTC: String
 )
 
-fun UploadedImageServerModel.toDomain() = Photo(0L, name, "", createdAtUTC, url)
+fun UploadedImageServerModel.toDomain() = Photo("", name, "", createdAtUTC, url)

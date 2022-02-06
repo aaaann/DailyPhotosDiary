@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -27,13 +28,19 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.gallery_impl.R
+import com.annevonwolffen.gallery_impl.data.remote.firebase.Image
 import com.annevonwolffen.gallery_impl.databinding.FragmentAddImageBinding
 import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
+import com.annevonwolffen.gallery_impl.domain.Photo
 import com.annevonwolffen.gallery_impl.domain.UploadImage
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.AddImageViewModel
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
 import com.annevonwolffen.ui_utils_api.image.ImageLoader
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -97,10 +104,67 @@ class AddImageFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.save) {
             viewModel.fileFlow.value?.let {
-                viewModel.saveImage(UploadImage(file = it))
+                // viewModel.saveImage(UploadImage(file = it))
+                uploadImageToStorage(
+                    Image(
+                        "", it.name, "test description", "",
+                        FileProvider.getUriForFile(
+                            requireContext(),
+                            "com.annevonwolffen.fileprovider",
+                            it
+                        ).toString()
+                    )
+                )
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun uploadImageToStorage(image: Image) {
+        // load to db
+        val dbReference = Firebase.database.reference
+            .child("dailyphotosdiary")
+            .child(Firebase.auth.currentUser?.uid.orEmpty())
+            .child("testfolder")
+
+        val generatedId = dbReference.push().key.orEmpty()
+        dbReference
+            .child(generatedId)
+            .setValue(image)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d(TAG, "Saving to db is successful: $generatedId")
+                }
+            }
+
+        val storageReference = Firebase.storage.reference
+            .child("dailyphotosdiary")
+            .child(Firebase.auth.currentUser?.uid.orEmpty())
+            .child("testfolder")
+            .child(image.name.orEmpty())
+
+        val uploadTask = storageReference.putFile(image.url.orEmpty().toUri())
+        uploadTask.continueWithTask { task ->
+            if (!task.isSuccessful) {
+                task.exception?.let {
+                    Log.d(TAG, "Ошибка при загрузке картинки на сервер: ${it.message}")
+                }
+            }
+            storageReference.downloadUrl
+        }.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d(TAG, "Ссылка на картинку: ${task.result}")
+                // update db entry
+                dbReference
+                    .child(generatedId)
+                    .setValue(image.copy(id = generatedId, url = task.result.toString()))
+
+                findNavController().popBackStack()
+                viewModel.setFile(null)
+            } else {
+                Log.d(TAG, "Ошибка при получении ссылки на картинку: ${task.exception?.message}")
+            }
+        }
     }
 
     private fun collectFlows() {
