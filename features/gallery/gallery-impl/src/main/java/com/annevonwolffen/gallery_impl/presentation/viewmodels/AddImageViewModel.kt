@@ -3,8 +3,8 @@ package com.annevonwolffen.gallery_impl.presentation.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.annevonwolffen.gallery_impl.domain.Photo
-import com.annevonwolffen.gallery_impl.domain.PhotosInteractor
+import com.annevonwolffen.gallery_impl.domain.Image
+import com.annevonwolffen.gallery_impl.domain.ImagesInteractor
 import com.annevonwolffen.gallery_impl.domain.UploadImage
 import com.annevonwolffen.gallery_impl.presentation.AddImageBottomSheet.AddImage
 import com.annevonwolffen.gallery_impl.presentation.Result
@@ -18,13 +18,13 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.io.File
 
-class AddImageViewModel(private val imagesInteractor: PhotosInteractor) : ViewModel() {
+class AddImageViewModel(private val imagesInteractor: ImagesInteractor) : ViewModel() {
 
     val fileFlow: StateFlow<File?> get() = _fileFlow
     private val _fileFlow: MutableStateFlow<File?> = MutableStateFlow(null)
 
     val uploadedImageFlow get() = _uploadedImageFlow.receiveAsFlow()
-    private val _uploadedImageFlow = Channel<State<List<Photo>>>(CONFLATED)
+    private val _uploadedImageFlow = Channel<State<List<Image>>>(CONFLATED)
 
     val addImageEvent get() = _addImageEvent.receiveAsFlow()
     private val _addImageEvent = Channel<AddImage>(CONFLATED)

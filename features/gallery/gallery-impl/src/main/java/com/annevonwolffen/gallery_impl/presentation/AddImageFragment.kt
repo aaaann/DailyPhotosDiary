@@ -28,11 +28,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.gallery_impl.R
-import com.annevonwolffen.gallery_impl.data.remote.firebase.Image
+import com.annevonwolffen.gallery_impl.data.remote.firebase.ImageEntry
 import com.annevonwolffen.gallery_impl.databinding.FragmentAddImageBinding
 import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
-import com.annevonwolffen.gallery_impl.domain.Photo
-import com.annevonwolffen.gallery_impl.domain.UploadImage
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.AddImageViewModel
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
 import com.annevonwolffen.ui_utils_api.image.ImageLoader
@@ -58,7 +56,7 @@ class AddImageFragment : Fragment() {
     private val viewModel: AddImageViewModel by activityViewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return AddImageViewModel(getFeature(GalleryInternalApi::class.java).photosInteractor) as T
+                return AddImageViewModel(getFeature(GalleryInternalApi::class.java).imagesInteractor) as T
             } // TODO: create base ViewModelProviderFactory in some core module
         }
     }
@@ -106,7 +104,7 @@ class AddImageFragment : Fragment() {
             viewModel.fileFlow.value?.let {
                 // viewModel.saveImage(UploadImage(file = it))
                 uploadImageToStorage(
-                    Image(
+                    ImageEntry(
                         "", it.name, "test description", "",
                         FileProvider.getUriForFile(
                             requireContext(),
@@ -120,7 +118,7 @@ class AddImageFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun uploadImageToStorage(image: Image) {
+    private fun uploadImageToStorage(imageEntry: ImageEntry) {
         // load to db
         val dbReference = Firebase.database.reference
             .child("dailyphotosdiary")
@@ -130,7 +128,7 @@ class AddImageFragment : Fragment() {
         val generatedId = dbReference.push().key.orEmpty()
         dbReference
             .child(generatedId)
-            .setValue(image)
+            .setValue(imageEntry)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d(TAG, "Saving to db is successful: $generatedId")
@@ -141,9 +139,9 @@ class AddImageFragment : Fragment() {
             .child("dailyphotosdiary")
             .child(Firebase.auth.currentUser?.uid.orEmpty())
             .child("testfolder")
-            .child(image.name.orEmpty())
+            .child(imageEntry.name.orEmpty())
 
-        val uploadTask = storageReference.putFile(image.url.orEmpty().toUri())
+        val uploadTask = storageReference.putFile(imageEntry.url.orEmpty().toUri())
         uploadTask.continueWithTask { task ->
             if (!task.isSuccessful) {
                 task.exception?.let {
@@ -157,7 +155,7 @@ class AddImageFragment : Fragment() {
                 // update db entry
                 dbReference
                     .child(generatedId)
-                    .setValue(image.copy(id = generatedId, url = task.result.toString()))
+                    .setValue(imageEntry.copy(id = generatedId, url = task.result.toString()))
 
                 findNavController().popBackStack()
                 viewModel.setFile(null)

@@ -4,8 +4,7 @@ import com.annevonwolffen.coroutine_utils_api.CoroutineDispatchers
 import com.annevonwolffen.gallery_impl.data.remote.BaseImage4IOResponse
 import com.annevonwolffen.gallery_impl.data.remote.PhotosService
 import com.annevonwolffen.gallery_impl.data.remote.toDomain
-import com.annevonwolffen.gallery_impl.domain.Photo
-import com.annevonwolffen.gallery_impl.domain.PhotosRepository
+import com.annevonwolffen.gallery_impl.domain.Image
 import com.annevonwolffen.gallery_impl.domain.UploadImage
 import com.annevonwolffen.gallery_impl.presentation.Result
 import kotlinx.coroutines.withContext
@@ -21,8 +20,8 @@ class PhotosRepositoryImpl(
     private val photosService: PhotosService,
     private val coroutineDispatchers: CoroutineDispatchers,
     private val apiVersion: String
-) : PhotosRepository {
-    override suspend fun loadPhotos(folder: String): Result<List<Photo>> {
+) {
+    suspend fun loadPhotos(folder: String): Result<List<Image>> {
         return withContext(coroutineDispatchers.ioDispatcher) {
             processRequest(
                 request = { photosService.listFolder(apiVersion, folder) },
@@ -31,7 +30,7 @@ class PhotosRepositoryImpl(
         }
     }
 
-    override suspend fun uploadImages(folder: String, uploadImage: UploadImage): Result<List<Photo>> {
+    suspend fun uploadImages(folder: String, uploadImage: UploadImage): Result<List<Image>> {
         val useFileNameRqBody = "false".toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val overwriteRqBody = "false".toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val folderRqBody = folder.toRequestBody("multipart/form-data".toMediaTypeOrNull())

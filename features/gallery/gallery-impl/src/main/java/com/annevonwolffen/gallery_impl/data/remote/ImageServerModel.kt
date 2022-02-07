@@ -1,6 +1,6 @@
 package com.annevonwolffen.gallery_impl.data.remote
 
-import com.annevonwolffen.gallery_impl.domain.Photo
+import com.annevonwolffen.gallery_impl.domain.Image
 
 class ImageServerModel(
     val folder: String,
@@ -10,4 +10,4 @@ class ImageServerModel(
     val url: String
 )
 
-fun ImageServerModel.toDomain() = Photo("", name, "", createdAt, url)
+fun ImageServerModel.toDomain() = Image("", name, "", createdAt, url)

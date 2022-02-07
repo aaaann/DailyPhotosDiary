@@ -7,16 +7,16 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.annevonwolffen.gallery_impl.R
 import com.annevonwolffen.gallery_impl.databinding.PhotoCardLayoutBinding
-import com.annevonwolffen.gallery_impl.domain.Photo
+import com.annevonwolffen.gallery_impl.domain.Image
 import com.annevonwolffen.ui_utils_api.image.ImageLoader
 
 class PhotosListAdapter(private val imageLoader: ImageLoader) :
-    ListAdapter<Photo, PhotosListAdapter.ViewHolder>(DiffUtilCallback()) {
+    ListAdapter<Image, PhotosListAdapter.ViewHolder>(DiffUtilCallback()) {
 
-    class DiffUtilCallback : DiffUtil.ItemCallback<Photo>() {
-        override fun areItemsTheSame(oldItem: Photo, newItem: Photo): Boolean = oldItem.id == newItem.id
+    class DiffUtilCallback : DiffUtil.ItemCallback<Image>() {
+        override fun areItemsTheSame(oldItem: Image, newItem: Image): Boolean = oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: Photo, newItem: Photo): Boolean = oldItem == newItem
+        override fun areContentsTheSame(oldItem: Image, newItem: Image): Boolean = oldItem == newItem
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,8 +31,8 @@ class PhotosListAdapter(private val imageLoader: ImageLoader) :
     class ViewHolder(private val binding: PhotoCardLayoutBinding, private val imageLoader: ImageLoader) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(photo: Photo) {
-            with(photo) {
+        fun bind(image: Image) {
+            with(image) {
                 binding.tvDate.text = createdAt
                 binding.tvDescription.text = description
                 // TODO: parse date of week from date
