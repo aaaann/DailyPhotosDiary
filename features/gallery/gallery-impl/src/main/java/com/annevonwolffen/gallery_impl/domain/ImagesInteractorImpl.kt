@@ -5,11 +5,15 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ImagesInteractorImpl @Inject constructor(private val imagesRepository: ImagesRepository) : ImagesInteractor {
-    override fun loadPhotos(folder: String): Flow<Result<List<Image>>> {
-        return imagesRepository.loadPhotos(folder)
+    override fun loadImages(folder: String): Flow<Result<List<Image>>> {
+        return imagesRepository.loadImages(folder)
     }
 
-    override suspend fun uploadImages(folder: String, uploadImage: UploadImage): Result<List<Image>> {
-        return imagesRepository.uploadImages(folder, uploadImage)
+    override suspend fun uploadImageToDatabase(folder: String, image: Image): Result<String> {
+        return imagesRepository.uploadImageToDatabase(folder, image)
+    }
+
+    override suspend fun uploadFileToStorage(folder: String, image: Image) {
+        return imagesRepository.uploadFileToStorage(folder, image)
     }
 }

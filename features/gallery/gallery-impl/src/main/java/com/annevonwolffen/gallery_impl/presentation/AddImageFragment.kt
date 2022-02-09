@@ -31,6 +31,7 @@ import com.annevonwolffen.gallery_impl.R
 import com.annevonwolffen.gallery_impl.data.remote.firebase.ImageEntry
 import com.annevonwolffen.gallery_impl.databinding.FragmentAddImageBinding
 import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
+import com.annevonwolffen.gallery_impl.domain.Image
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.AddImageViewModel
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
 import com.annevonwolffen.ui_utils_api.image.ImageLoader
@@ -102,11 +103,12 @@ class AddImageFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.save) {
             viewModel.fileFlow.value?.let {
-                // viewModel.saveImage(UploadImage(file = it))
-                uploadImageToStorage(
-                    ImageEntry(
-                        "", it.name, "test description", "",
-                        FileProvider.getUriForFile(
+                viewModel.saveImage(
+                    Image(
+                        name = it.name,
+                        description = "test description", // TODO: take from edit text
+                        createdAt = "9 февр. 20222", // TODO: take from data picker
+                        url = FileProvider.getUriForFile(
                             requireContext(),
                             "com.annevonwolffen.fileprovider",
                             it
@@ -118,52 +120,52 @@ class AddImageFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun uploadImageToStorage(imageEntry: ImageEntry) {
-        // load to db
-        val dbReference = Firebase.database.reference
-            .child("dailyphotosdiary")
-            .child(Firebase.auth.currentUser?.uid.orEmpty())
-            .child("testfolder")
-
-        val generatedId = dbReference.push().key.orEmpty()
-        dbReference
-            .child(generatedId)
-            .setValue(imageEntry)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d(TAG, "Saving to db is successful: $generatedId")
-                }
-            }
-
-        val storageReference = Firebase.storage.reference
-            .child("dailyphotosdiary")
-            .child(Firebase.auth.currentUser?.uid.orEmpty())
-            .child("testfolder")
-            .child(imageEntry.name.orEmpty())
-
-        val uploadTask = storageReference.putFile(imageEntry.url.orEmpty().toUri())
-        uploadTask.continueWithTask { task ->
-            if (!task.isSuccessful) {
-                task.exception?.let {
-                    Log.d(TAG, "Ошибка при загрузке картинки на сервер: ${it.message}")
-                }
-            }
-            storageReference.downloadUrl
-        }.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Log.d(TAG, "Ссылка на картинку: ${task.result}")
-                // update db entry
-                dbReference
-                    .child(generatedId)
-                    .setValue(imageEntry.copy(id = generatedId, url = task.result.toString()))
-
-                findNavController().popBackStack()
-                viewModel.setFile(null)
-            } else {
-                Log.d(TAG, "Ошибка при получении ссылки на картинку: ${task.exception?.message}")
-            }
-        }
-    }
+    // private fun uploadImageToStorage(imageEntry: ImageEntry) {
+    //     // load to db
+    //     val dbReference = Firebase.database.reference
+    //         .child("dailyphotosdiary")
+    //         .child(Firebase.auth.currentUser?.uid.orEmpty())
+    //         .child("testfolder")
+    //
+    //     val generatedId = dbReference.push().key.orEmpty()
+    //     dbReference
+    //         .child(generatedId)
+    //         .setValue(imageEntry)
+    //         .addOnCompleteListener { task ->
+    //             if (task.isSuccessful) {
+    //                 Log.d(TAG, "Saving to db is successful: $generatedId")
+    //             }
+    //         }
+    //
+    //     val storageReference = Firebase.storage.reference
+    //         .child("dailyphotosdiary")
+    //         .child(Firebase.auth.currentUser?.uid.orEmpty())
+    //         .child("testfolder")
+    //         .child(imageEntry.name.orEmpty())
+    //
+    //     val uploadTask = storageReference.putFile(imageEntry.url.orEmpty().toUri())
+    //     uploadTask.continueWithTask { task ->
+    //         if (!task.isSuccessful) {
+    //             task.exception?.let {
+    //                 Log.d(TAG, "Ошибка при загрузке картинки на сервер: ${it.message}")
+    //             }
+    //         }
+    //         storageReference.downloadUrl
+    //     }.addOnCompleteListener { task ->
+    //         if (task.isSuccessful) {
+    //             Log.d(TAG, "Ссылка на картинку: ${task.result}")
+    //             // update db entry
+    //             dbReference
+    //                 .child(generatedId)
+    //                 .setValue(imageEntry.copy(id = generatedId, url = task.result.toString()))
+    //
+    //             findNavController().popBackStack()
+    //             viewModel.setFile(null)
+    //         } else {
+    //             Log.d(TAG, "Ошибка при получении ссылки на картинку: ${task.exception?.message}")
+    //         }
+    //     }
+    // }
 
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -172,13 +174,12 @@ class AddImageFragment : Fragment() {
                     imageLoader.loadImage(addedImage, it)
                 }
 
-                launchFlowCollection(viewModel.uploadedImageFlow) {
+                launchFlowCollection(viewModel.uploadedImageEvent) {
                     when (it) {
-                        is State.Success -> it.value.takeIf { images -> images.isNotEmpty() }
-                            ?.let {
-                                findNavController().popBackStack()
-                                viewModel.setFile(null)
-                            }
+                        is State.Success -> {
+                            findNavController().popBackStack()
+                            viewModel.setFile(null)
+                        }
                         is State.Error -> Toast.makeText(
                             activity,
                             "Ошибка при загрузке картинки: ${it.errorMessage}",

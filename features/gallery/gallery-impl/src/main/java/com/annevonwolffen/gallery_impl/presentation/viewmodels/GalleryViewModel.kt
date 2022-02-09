@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.stateIn
 
 class GalleryViewModel(imagesInteractor: ImagesInteractor) : ViewModel() {
 
-    val images: StateFlow<State<List<Image>>> = imagesInteractor.loadPhotos(TEST_FOLDER)
+    val images: StateFlow<State<List<Image>>> = imagesInteractor.loadImages(TEST_FOLDER)
         .map {
             when (it) {
                 is Result.Success -> State.Success(it.value)

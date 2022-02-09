@@ -4,6 +4,7 @@ import com.annevonwolffen.gallery_impl.presentation.Result
 import kotlinx.coroutines.flow.Flow
 
 interface ImagesInteractor {
-    fun loadPhotos(folder: String): Flow<Result<List<Image>>>
-    suspend fun uploadImages(folder: String, uploadImage: UploadImage): Result<List<Image>>
+    fun loadImages(folder: String): Flow<Result<List<Image>>>
+    suspend fun uploadImageToDatabase(folder: String, image: Image): Result<String>
+    suspend fun uploadFileToStorage(folder: String, image: Image)
 }

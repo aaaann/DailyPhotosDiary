@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.annevonwolffen.gallery_impl.domain.Image
 import com.annevonwolffen.gallery_impl.domain.ImagesInteractor
-import com.annevonwolffen.gallery_impl.domain.UploadImage
 import com.annevonwolffen.gallery_impl.presentation.AddImageBottomSheet.AddImage
 import com.annevonwolffen.gallery_impl.presentation.Result
 import com.annevonwolffen.gallery_impl.presentation.State
@@ -23,8 +22,8 @@ class AddImageViewModel(private val imagesInteractor: ImagesInteractor) : ViewMo
     val fileFlow: StateFlow<File?> get() = _fileFlow
     private val _fileFlow: MutableStateFlow<File?> = MutableStateFlow(null)
 
-    val uploadedImageFlow get() = _uploadedImageFlow.receiveAsFlow()
-    private val _uploadedImageFlow = Channel<State<List<Image>>>(CONFLATED)
+    val uploadedImageEvent get() = _uploadedImageEvent.receiveAsFlow()
+    private val _uploadedImageEvent = Channel<State<Unit>>(CONFLATED)
 
     val addImageEvent get() = _addImageEvent.receiveAsFlow()
     private val _addImageEvent = Channel<AddImage>(CONFLATED)
@@ -40,15 +39,18 @@ class AddImageViewModel(private val imagesInteractor: ImagesInteractor) : ViewMo
         _fileFlow.value = file
     }
 
-    fun saveImage(image: UploadImage) {
+    fun saveImage(image: Image) {
         viewModelScope.launch(exceptionHandler) {
-            imagesInteractor.uploadImages(TEST_FOLDER, image).also {
-                _uploadedImageFlow.send(
-                    when (it) {
-                        is Result.Success -> State.Success(it.value)
-                        is Result.Error -> State.Error(it.errorMessage)
+            imagesInteractor.uploadImageToDatabase(TEST_FOLDER, image).also {
+                when (it) {
+                    is Result.Success -> {
+                        _uploadedImageEvent.send(State.Success(Unit))
+                        imagesInteractor.uploadFileToStorage(TEST_FOLDER, image.copy(id = it.value))
                     }
-                )
+                    is Result.Error -> {
+                        _uploadedImageEvent.send(State.Error(it.errorMessage))
+                    }
+                }
             }
         }
     }
