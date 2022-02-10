@@ -17,6 +17,11 @@ class PhotosListAdapter(private val imageLoader: ImageLoader) :
         override fun areItemsTheSame(oldItem: Image, newItem: Image): Boolean = oldItem.id == newItem.id
 
         override fun areContentsTheSame(oldItem: Image, newItem: Image): Boolean = oldItem == newItem
+
+        override fun getChangePayload(oldItem: Image, newItem: Image): Any? {
+            // TODO: calculate payload; example: https://proandroiddev.com/diffutil-is-a-must-797502bc1149
+            return super.getChangePayload(oldItem, newItem)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,10 +33,18 @@ class PhotosListAdapter(private val imageLoader: ImageLoader) :
         holder.bind(getItem(position))
     }
 
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
+        if (payloads.isNotEmpty()) {
+            holder.bind(getItem(position), payloads)
+        }
+        super.onBindViewHolder(holder, position, payloads)
+    }
+
     class ViewHolder(private val binding: PhotoCardLayoutBinding, private val imageLoader: ImageLoader) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(image: Image) {
+        fun bind(image: Image, payloads: MutableList<Any>? = null) {
+            // TODO: parse payloads
             with(image) {
                 binding.tvDate.text = createdAt
                 binding.tvDescription.text = description
