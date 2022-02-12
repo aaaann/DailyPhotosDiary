@@ -14,6 +14,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,6 +27,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.annevonwolffen.coroutine_utils_api.extension.launchFlowCollection
 import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.gallery_impl.R
 import com.annevonwolffen.gallery_impl.databinding.FragmentAddImageBinding
@@ -36,6 +38,7 @@ import com.annevonwolffen.gallery_impl.presentation.utils.createImageFile
 import com.annevonwolffen.gallery_impl.presentation.utils.getUriForFile
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.AddImageViewModel
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
+import com.annevonwolffen.ui_utils_api.extensions.setVisibility
 import com.annevonwolffen.ui_utils_api.image.ImageLoader
 import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.CoroutineScope
@@ -58,7 +61,7 @@ class AddImageFragment : Fragment() {
         }
     }
 
-    private val args: AddImageFragmentArgs by navArgs() // todo: will need it later
+    private val args: AddImageFragmentArgs by navArgs()
     private val image: Image? by lazy { args.image }
 
     private val imageLoader: ImageLoader by lazy { getFeature(UiUtilsApi::class.java).imageLoader }
@@ -66,6 +69,7 @@ class AddImageFragment : Fragment() {
     private lateinit var addedImage: ShapeableImageView
     private lateinit var description: EditText
     private lateinit var dateTextView: TextView
+    private lateinit var progressLoader: FrameLayout
 
     private var selectedCalendar: Calendar = Calendar.getInstance()
 
@@ -92,6 +96,7 @@ class AddImageFragment : Fragment() {
     }
 
     private fun initViews() {
+        progressLoader = binding.progressLayout
         addedImage = binding.ivAddedImage
         description = binding.etImageDescr
         image?.let {
@@ -168,17 +173,23 @@ class AddImageFragment : Fragment() {
                     } ?: imageLoader.loadImage(addedImage, image?.url)
                 }
 
+                launchFlowCollection(viewModel.progressLoaderState) { isLoading ->
+                    progressLoader.setVisibility(isLoading)
+                }
+
                 launchFlowCollection(viewModel.uploadedImageEvent) {
                     when (it) {
                         is State.Success -> {
                             findNavController().popBackStack()
                             viewModel.setFile(null)
                         }
-                        is State.Error -> Toast.makeText(
-                            activity,
-                            "Ошибка при загрузке картинки: ${it.errorMessage}",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        is State.Error -> {
+                            Toast.makeText(
+                                activity,
+                                "Ошибка при загрузке картинки: ${it.errorMessage}",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }
                 }
 
@@ -217,12 +228,6 @@ class AddImageFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun <T> CoroutineScope.launchFlowCollection(flow: Flow<T>, action: (T) -> Unit) {
-        launch {
-            flow.collect { value -> action.invoke(value) }
-        }
     }
 
     private companion object {

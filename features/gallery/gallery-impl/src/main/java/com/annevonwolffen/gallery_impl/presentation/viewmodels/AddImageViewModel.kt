@@ -31,6 +31,9 @@ class AddImageViewModel(private val imagesInteractor: ImagesInteractor) : ViewMo
     val dismissBottomSheetEvent get() = _dismissBottomSheetEvent.receiveAsFlow()
     private val _dismissBottomSheetEvent = Channel<Unit>(CONFLATED)
 
+    val progressLoaderState: StateFlow<Boolean> get() = _progressLoaderState
+    private val _progressLoaderState = MutableStateFlow(false)
+
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         Log.w(TAG, "Ошибка при загрузке картинок: $throwable")
     }
@@ -41,7 +44,9 @@ class AddImageViewModel(private val imagesInteractor: ImagesInteractor) : ViewMo
 
     fun saveImage(image: Image) {
         viewModelScope.launch(exceptionHandler) {
+            _progressLoaderState.value = true
             imagesInteractor.uploadImageToDatabase(TEST_FOLDER, image).also {
+                _progressLoaderState.value = false
                 when (it) {
                     is Result.Success -> {
                         _uploadedImageEvent.send(State.Success(Unit))
