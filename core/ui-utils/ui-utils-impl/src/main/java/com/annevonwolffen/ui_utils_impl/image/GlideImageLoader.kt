@@ -9,7 +9,7 @@ import java.io.File
 import javax.inject.Inject
 
 class GlideImageLoader @Inject constructor() : ImageLoader {
-    override fun loadImage(view: ImageView, url: String, @DrawableRes placeHolder: Int?) {
+    override fun loadImage(view: ImageView, url: String?, @DrawableRes placeHolder: Int?) {
         Glide.with(view)
             .load(url)
             .fitCenter()

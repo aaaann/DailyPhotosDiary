@@ -63,19 +63,24 @@ class GalleryFragment : Fragment() {
     private fun initViews() {
         errorBanner = binding.errorBanner
         addImageButton = binding.btnAddImage
-        addImageButton.setOnClickListener {
-            findNavController().navigate(
-                GalleryFragmentDirections.actionToAddImage(
-                    resources.getString(R.string.add_image_title)
-                )
-            )
-        }
+        addImageButton.setOnClickListener { addOrEditImage(null) }
     }
 
     private fun setupRecyclerView() {
         recyclerView = binding.rvPhotos
-        adapter = PhotosListAdapter(getFeature(UiUtilsApi::class.java).imageLoader)
+        adapter = PhotosListAdapter(getFeature(UiUtilsApi::class.java).imageLoader) { image -> addOrEditImage(image) }
         recyclerView.adapter = adapter
+    }
+
+    private fun addOrEditImage(image: Image?) {
+        findNavController().navigate(
+            GalleryFragmentDirections.actionToAddImage(
+                resources.getString(
+                    if (image == null) R.string.add_image_title else R.string.edit_image_title
+                ),
+                image
+            )
+        )
     }
 
     private fun collectImages() {

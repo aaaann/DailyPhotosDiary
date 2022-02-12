@@ -24,6 +24,6 @@ fun ImageEntry.fromImage(image: Image): ImageEntry = this.copy(
     id = image.id,
     name = image.name,
     description = image.description,
-    createdAt = image.createdAt,
+    createdAt = image.date,
     url = image.url
 )

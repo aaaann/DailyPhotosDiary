@@ -10,7 +10,10 @@ import com.annevonwolffen.gallery_impl.databinding.PhotoCardLayoutBinding
 import com.annevonwolffen.gallery_impl.domain.Image
 import com.annevonwolffen.ui_utils_api.image.ImageLoader
 
-class PhotosListAdapter(private val imageLoader: ImageLoader) :
+class PhotosListAdapter(
+    private val imageLoader: ImageLoader,
+    private val onClick: (Image) -> Unit
+) :
     ListAdapter<Image, PhotosListAdapter.ViewHolder>(DiffUtilCallback()) {
 
     class DiffUtilCallback : DiffUtil.ItemCallback<Image>() {
@@ -26,7 +29,7 @@ class PhotosListAdapter(private val imageLoader: ImageLoader) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = PhotoCardLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding, imageLoader)
+        return ViewHolder(binding, imageLoader, onClick)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -40,15 +43,20 @@ class PhotosListAdapter(private val imageLoader: ImageLoader) :
         super.onBindViewHolder(holder, position, payloads)
     }
 
-    class ViewHolder(private val binding: PhotoCardLayoutBinding, private val imageLoader: ImageLoader) :
+    class ViewHolder(
+        private val binding: PhotoCardLayoutBinding,
+        private val imageLoader: ImageLoader,
+        private val onClick: (Image) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(image: Image, payloads: MutableList<Any>? = null) {
             // TODO: parse payloads
             with(image) {
-                binding.tvDate.text = createdAt.toCalendar().toString(binding.root.resources)
+                binding.tvDate.text = date.toCalendar().toString(binding.root.resources)
                 binding.tvDescription.text = description
                 imageLoader.loadImage(binding.ivPhoto, url, R.drawable.image_progress_loader)
+                binding.root.setOnClickListener { onClick.invoke(this) }
             }
         }
     }

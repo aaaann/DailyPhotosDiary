@@ -2,7 +2,8 @@
     <string name="reload">Попробовать снова</string>
     <string name="loading_error">Не удалось загрузить картинки</string>
     <string name="add_image_descr">Описание…</string>
-    <string name="add_image_title">Добавить картинку</string>
+    <string name="add_image_title">Добавить заметку</string>
+    <string name="edit_image_title">Редактировать заметку</string>
     <string name="save">Сохранить</string>
     <string name="from_camera">Камера</string>
     <string name="from_gallery">Галерея</string>
