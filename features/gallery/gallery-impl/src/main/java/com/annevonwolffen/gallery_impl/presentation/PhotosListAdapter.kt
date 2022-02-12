@@ -46,9 +46,8 @@ class PhotosListAdapter(private val imageLoader: ImageLoader) :
         fun bind(image: Image, payloads: MutableList<Any>? = null) {
             // TODO: parse payloads
             with(image) {
-                binding.tvDate.text = createdAt
+                binding.tvDate.text = createdAt.toCalendar().toString(binding.root.resources)
                 binding.tvDescription.text = description
-                // TODO: parse date of week from date
                 imageLoader.loadImage(binding.ivPhoto, url, R.drawable.image_progress_loader)
             }
         }

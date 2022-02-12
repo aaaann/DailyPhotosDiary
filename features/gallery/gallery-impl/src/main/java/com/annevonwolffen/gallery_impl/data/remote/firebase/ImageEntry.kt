@@ -8,7 +8,7 @@ data class ImageEntry(
     val id: String? = null,
     val name: String? = null,
     val description: String? = null,
-    val createdAt: String? = null,
+    val createdAt: Long? = null,
     val url: String? = null
 )
 
@@ -16,7 +16,7 @@ fun ImageEntry.toImage(key: String?): Image = Image(
     key.orEmpty(),
     name.orEmpty(),
     description.orEmpty(),
-    createdAt.orEmpty(),
+    createdAt ?: 0L,
     url.orEmpty()
 )
 
@@ -24,6 +24,6 @@ fun ImageEntry.fromImage(image: Image): ImageEntry = this.copy(
     id = image.id,
     name = image.name,
     description = image.description,
-    createdAt = image.createdAt, // TODO: maybe different types and parsing needed
+    createdAt = image.createdAt,
     url = image.url
 )

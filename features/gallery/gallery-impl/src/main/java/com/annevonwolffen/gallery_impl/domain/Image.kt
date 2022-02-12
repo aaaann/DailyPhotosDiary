@@ -4,6 +4,6 @@ data class Image(
     val id: String? = null,
     val name: String,
     val description: String? = null,
-    val createdAt: String,
+    val createdAt: Long,
     val url: String
 )

@@ -1,6 +1,7 @@
 package com.annevonwolffen.gallery_impl.presentation
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -13,10 +14,11 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -28,7 +30,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.gallery_impl.R
-import com.annevonwolffen.gallery_impl.data.remote.firebase.ImageEntry
 import com.annevonwolffen.gallery_impl.databinding.FragmentAddImageBinding
 import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
 import com.annevonwolffen.gallery_impl.domain.Image
@@ -36,10 +37,6 @@ import com.annevonwolffen.gallery_impl.presentation.viewmodels.AddImageViewModel
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
 import com.annevonwolffen.ui_utils_api.image.ImageLoader
 import com.google.android.material.imageview.ShapeableImageView
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -47,6 +44,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 
 class AddImageFragment : Fragment() {
@@ -67,6 +65,10 @@ class AddImageFragment : Fragment() {
     private val imageLoader: ImageLoader by lazy { getFeature(UiUtilsApi::class.java).imageLoader }
 
     private lateinit var addedImage: ShapeableImageView
+    private lateinit var description: EditText
+    private lateinit var dateTextView: TextView
+
+    private var selectedCalendar: Calendar = Calendar.getInstance()
 
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -89,11 +91,51 @@ class AddImageFragment : Fragment() {
 
     private fun initViews() {
         addedImage = binding.ivAddedImage
+        description = binding.etImageDescr
+        setupDateField()
 
         val addImageButton = binding.btnImage
         addImageButton.setOnClickListener {
             findNavController().navigate(AddImageFragmentDirections.actionToAddImageBottomSheet())
         }
+    }
+
+    private fun setupDateField() {
+        val initialCalendar = Calendar.getInstance()
+        dateTextView = binding.tvDate
+        if (dateTextView.text.isEmpty()) {
+            dateTextView.text = getString(R.string.today)
+        }
+        dateTextView.setOnClickListener {
+            val datePickerDialog = DatePickerDialog(
+                requireContext(),
+                { _, year, month, dayOfMonth ->
+                    selectedCalendar = Calendar.getInstance().also { it.set(year, month, dayOfMonth) }
+                    dateTextView.text =
+                        if (selectedCalendar.isEqualByDate(initialCalendar)) {
+                            getString(R.string.today)
+                        } else {
+                            selectedCalendar.toString(resources)
+                        }
+                },
+                selectedCalendar.get(Calendar.YEAR),
+                selectedCalendar.get(Calendar.MONTH),
+                selectedCalendar.get(Calendar.DAY_OF_MONTH)
+            )
+            datePickerDialog.datePicker.maxDate = Calendar.getInstance().timeInMillis
+            datePickerDialog.show()
+        }
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        selectedCalendar = savedInstanceState?.getSerializable(SELECTED_CALENDAR) as? Calendar
+            ?: Calendar.getInstance()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putSerializable(SELECTED_CALENDAR, selectedCalendar)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -106,8 +148,8 @@ class AddImageFragment : Fragment() {
                 viewModel.saveImage(
                     Image(
                         name = it.name,
-                        description = "test description", // TODO: take from edit text
-                        createdAt = "9 февр. 20222", // TODO: take from data picker
+                        description = description.text.toString(),
+                        createdAt = selectedCalendar.timeInMillis,
                         url = FileProvider.getUriForFile(
                             requireContext(),
                             "com.annevonwolffen.fileprovider",
@@ -119,53 +161,6 @@ class AddImageFragment : Fragment() {
         }
         return super.onOptionsItemSelected(item)
     }
-
-    // private fun uploadImageToStorage(imageEntry: ImageEntry) {
-    //     // load to db
-    //     val dbReference = Firebase.database.reference
-    //         .child("dailyphotosdiary")
-    //         .child(Firebase.auth.currentUser?.uid.orEmpty())
-    //         .child("testfolder")
-    //
-    //     val generatedId = dbReference.push().key.orEmpty()
-    //     dbReference
-    //         .child(generatedId)
-    //         .setValue(imageEntry)
-    //         .addOnCompleteListener { task ->
-    //             if (task.isSuccessful) {
-    //                 Log.d(TAG, "Saving to db is successful: $generatedId")
-    //             }
-    //         }
-    //
-    //     val storageReference = Firebase.storage.reference
-    //         .child("dailyphotosdiary")
-    //         .child(Firebase.auth.currentUser?.uid.orEmpty())
-    //         .child("testfolder")
-    //         .child(imageEntry.name.orEmpty())
-    //
-    //     val uploadTask = storageReference.putFile(imageEntry.url.orEmpty().toUri())
-    //     uploadTask.continueWithTask { task ->
-    //         if (!task.isSuccessful) {
-    //             task.exception?.let {
-    //                 Log.d(TAG, "Ошибка при загрузке картинки на сервер: ${it.message}")
-    //             }
-    //         }
-    //         storageReference.downloadUrl
-    //     }.addOnCompleteListener { task ->
-    //         if (task.isSuccessful) {
-    //             Log.d(TAG, "Ссылка на картинку: ${task.result}")
-    //             // update db entry
-    //             dbReference
-    //                 .child(generatedId)
-    //                 .setValue(imageEntry.copy(id = generatedId, url = task.result.toString()))
-    //
-    //             findNavController().popBackStack()
-    //             viewModel.setFile(null)
-    //         } else {
-    //             Log.d(TAG, "Ошибка при получении ссылки на картинку: ${task.exception?.message}")
-    //         }
-    //     }
-    // }
 
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -265,5 +260,7 @@ class AddImageFragment : Fragment() {
 
     private companion object {
         const val TAG = "AddImageFragment"
+
+        private const val SELECTED_CALENDAR = "SELECTED_CALENDAR"
     }
 }
