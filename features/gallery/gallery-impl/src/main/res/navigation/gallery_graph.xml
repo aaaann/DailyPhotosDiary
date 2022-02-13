@@ -22,7 +22,7 @@
             <argument
                 android:name="image"
                 android:defaultValue="@null"
-                app:argType="com.annevonwolffen.gallery_impl.domain.Image"
+                app:argType="com.annevonwolffen.gallery_impl.presentation.models.Image"
                 app:nullable="true" />
 
         </action>
@@ -45,7 +45,7 @@
         <argument
             android:name="image"
             android:defaultValue="@null"
-            app:argType="com.annevonwolffen.gallery_impl.domain.Image"
+            app:argType="com.annevonwolffen.gallery_impl.presentation.models.Image"
             app:nullable="true" />
 
     </fragment>

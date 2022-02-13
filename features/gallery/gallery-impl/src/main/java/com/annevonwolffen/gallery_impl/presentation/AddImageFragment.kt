@@ -32,18 +32,19 @@ import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.gallery_impl.R
 import com.annevonwolffen.gallery_impl.databinding.FragmentAddImageBinding
 import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
-import com.annevonwolffen.gallery_impl.domain.Image
+import com.annevonwolffen.gallery_impl.presentation.models.Image
+import com.annevonwolffen.gallery_impl.presentation.models.toDomain
 import com.annevonwolffen.gallery_impl.presentation.utils.createFileFromUri
 import com.annevonwolffen.gallery_impl.presentation.utils.createImageFile
 import com.annevonwolffen.gallery_impl.presentation.utils.getUriForFile
+import com.annevonwolffen.gallery_impl.presentation.utils.isEqualByDate
+import com.annevonwolffen.gallery_impl.presentation.utils.toCalendar
+import com.annevonwolffen.gallery_impl.presentation.utils.toString
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.AddImageViewModel
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
 import com.annevonwolffen.ui_utils_api.extensions.setVisibility
 import com.annevonwolffen.ui_utils_api.image.ImageLoader
 import com.google.android.material.imageview.ShapeableImageView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.io.File
 import java.util.Calendar
@@ -158,7 +159,7 @@ class AddImageFragment : Fragment() {
                     description = description.text.toString(),
                     date = selectedCalendar.timeInMillis,
                     url = file?.getUriForFile(requireContext())?.toString() ?: image?.url.orEmpty()
-                )
+                ).toDomain()
             )
         }
         return super.onOptionsItemSelected(item)
