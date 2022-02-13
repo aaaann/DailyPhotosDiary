@@ -18,7 +18,7 @@ import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.gallery_impl.R
 import com.annevonwolffen.gallery_impl.databinding.FragmentGalleryBinding
 import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
-import com.annevonwolffen.gallery_impl.domain.Photo
+import com.annevonwolffen.gallery_impl.domain.Image
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.GalleryViewModel
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
 import com.annevonwolffen.ui_utils_api.extensions.setVisibility
@@ -39,7 +39,7 @@ class GalleryFragment : Fragment() {
     private val viewModel: GalleryViewModel by activityViewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return GalleryViewModel(getFeature(GalleryInternalApi::class.java).photosInteractor) as T
+                return GalleryViewModel(getFeature(GalleryInternalApi::class.java).imagesInteractor) as T
             } // TODO: create base ViewModelProviderFactory in some core module
         }
     }
@@ -57,37 +57,41 @@ class GalleryFragment : Fragment() {
 
         initViews()
         setupRecyclerView()
-        viewModel.loadPhotos()
-        collectPhotos()
+        collectImages()
     }
 
     private fun initViews() {
         errorBanner = binding.errorBanner
         addImageButton = binding.btnAddImage
-        addImageButton.setOnClickListener {
-            findNavController().navigate(
-                GalleryFragmentDirections.actionToAddImage(
-                    resources.getString(R.string.add_image_title)
-                )
-            )
-        }
+        addImageButton.setOnClickListener { addOrEditImage(null) }
     }
 
     private fun setupRecyclerView() {
         recyclerView = binding.rvPhotos
-        adapter = PhotosListAdapter(getFeature(UiUtilsApi::class.java).imageLoader)
+        adapter = PhotosListAdapter(getFeature(UiUtilsApi::class.java).imageLoader) { image -> addOrEditImage(image) }
         recyclerView.adapter = adapter
     }
 
-    private fun collectPhotos() {
+    private fun addOrEditImage(image: Image?) {
+        findNavController().navigate(
+            GalleryFragmentDirections.actionToAddImage(
+                resources.getString(
+                    if (image == null) R.string.add_image_title else R.string.edit_image_title
+                ),
+                image
+            )
+        )
+    }
+
+    private fun collectImages() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.photos.collect { render(it) }
+                viewModel.images.collect { render(it) }
             }
         }
     }
 
-    private fun render(state: State<List<Photo>>) {
+    private fun render(state: State<List<Image>>) {
         Log.d(TAG, "Rendering: $state")
         when (state) {
             is State.Loading -> {
