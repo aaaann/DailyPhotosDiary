@@ -26,7 +26,7 @@ class AddImageBottomSheet : BottomSheetDialogFragment() {
     private val viewModel: AddImageViewModel by activityViewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return AddImageViewModel(FeatureProvider.getFeature(GalleryInternalApi::class.java).photosInteractor) as T
+                return AddImageViewModel(FeatureProvider.getFeature(GalleryInternalApi::class.java).imagesInteractor) as T
             } // TODO: create base ViewModelProviderFactory in some core module
         }
     }

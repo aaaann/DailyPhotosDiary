@@ -3,38 +3,34 @@ package com.annevonwolffen.gallery_impl.presentation.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.annevonwolffen.gallery_impl.domain.Photo
-import com.annevonwolffen.gallery_impl.domain.PhotosInteractor
+import com.annevonwolffen.gallery_impl.domain.Image
+import com.annevonwolffen.gallery_impl.domain.ImagesInteractor
 import com.annevonwolffen.gallery_impl.presentation.Result
 import com.annevonwolffen.gallery_impl.presentation.State
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
-class GalleryViewModel(private val photosInteractor: PhotosInteractor) : ViewModel() {
+class GalleryViewModel(imagesInteractor: ImagesInteractor) : ViewModel() {
 
-    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        Log.w(TAG, "Ошибка при загрузке картинок: $throwable")
-        _photos.value = State.Error(throwable.message)
-    }
-
-    val photos: StateFlow<State<List<Photo>>>
-        get() = _photos
-    private val _photos: MutableStateFlow<State<List<Photo>>> = MutableStateFlow(State.Loading)
-
-    fun loadPhotos() {
-        viewModelScope.launch(exceptionHandler) {
-            _photos.value = State.Loading
-            photosInteractor.loadPhotos(TEST_FOLDER).also {
-                _photos.value =
-                    when (it) {
-                        is Result.Success -> State.Success(it.value)
-                        is Result.Error -> State.Error(it.errorMessage)
-                    }
+    val images: StateFlow<State<List<Image>>> = imagesInteractor.loadImages(TEST_FOLDER)
+        .map {
+            when (it) {
+                is Result.Success -> State.Success(it.value)
+                is Result.Error -> State.Error(it.errorMessage)
             }
         }
-    }
+        .catch { t ->
+            Log.w(TAG, "Ошибка при получении изображений: $t")
+            State.Error(t.message)
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = State.Loading
+        )
 
     private companion object {
         const val TAG = "GalleryViewModel"

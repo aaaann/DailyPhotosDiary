@@ -9,6 +9,6 @@ class GalleryFeatureInjector(featuresContainer: FeaturesContainer) :
     BaseFeatureInjector<GalleryInternalApi>(featuresContainer) {
     override fun buildFeature(): GalleryInternalApi {
         return DaggerGalleryComponent.factory()
-            .create(getDependency(CoroutineUtilsApi::class.java), getDependency(NetworkApi::class.java))
+            .create(getDependency(CoroutineUtilsApi::class.java))
     }
 }
