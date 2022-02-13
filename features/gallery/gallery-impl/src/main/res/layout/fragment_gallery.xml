@@ -13,7 +13,8 @@
         android:clipToPadding="false"
         android:overScrollMode="never"
         android:padding="16dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/images_group_layout" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/error_banner"

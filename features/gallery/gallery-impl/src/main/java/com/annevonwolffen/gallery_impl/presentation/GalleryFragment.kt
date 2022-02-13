@@ -18,7 +18,8 @@ import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.gallery_impl.R
 import com.annevonwolffen.gallery_impl.databinding.FragmentGalleryBinding
 import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
-import com.annevonwolffen.gallery_impl.domain.Image
+import com.annevonwolffen.gallery_impl.presentation.models.Image
+import com.annevonwolffen.gallery_impl.presentation.models.ImagesGroup
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.GalleryViewModel
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
 import com.annevonwolffen.ui_utils_api.extensions.setVisibility
@@ -31,7 +32,9 @@ class GalleryFragment : Fragment() {
     private var _binding: FragmentGalleryBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var adapter: PhotosListAdapter
+    private val galleryInternalApi: GalleryInternalApi by lazy { getFeature(GalleryInternalApi::class.java) }
+
+    private lateinit var adapter: ImagesGroupListAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var errorBanner: View
     private lateinit var addImageButton: FloatingActionButton
@@ -39,7 +42,7 @@ class GalleryFragment : Fragment() {
     private val viewModel: GalleryViewModel by activityViewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return GalleryViewModel(getFeature(GalleryInternalApi::class.java).imagesInteractor) as T
+                return GalleryViewModel(galleryInternalApi.imagesInteractor, galleryInternalApi.imagesAggregator) as T
             } // TODO: create base ViewModelProviderFactory in some core module
         }
     }
@@ -68,7 +71,8 @@ class GalleryFragment : Fragment() {
 
     private fun setupRecyclerView() {
         recyclerView = binding.rvPhotos
-        adapter = PhotosListAdapter(getFeature(UiUtilsApi::class.java).imageLoader) { image -> addOrEditImage(image) }
+        adapter =
+            ImagesGroupListAdapter(getFeature(UiUtilsApi::class.java).imageLoader) { image -> addOrEditImage(image) }
         recyclerView.adapter = adapter
     }
 
@@ -91,7 +95,7 @@ class GalleryFragment : Fragment() {
         }
     }
 
-    private fun render(state: State<List<Image>>) {
+    private fun render(state: State<List<ImagesGroup>>) {
         Log.d(TAG, "Rendering: $state")
         when (state) {
             is State.Loading -> {

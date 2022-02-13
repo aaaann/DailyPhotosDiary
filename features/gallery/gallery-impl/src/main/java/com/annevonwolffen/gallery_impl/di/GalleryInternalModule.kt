@@ -5,28 +5,44 @@ import com.annevonwolffen.di.PerFeature
 import com.annevonwolffen.gallery_impl.data.remote.firebase.FirebaseImageRepository
 import com.annevonwolffen.gallery_impl.domain.ImagesInteractor
 import com.annevonwolffen.gallery_impl.domain.ImagesInteractorImpl
+import com.annevonwolffen.gallery_impl.presentation.ImagesAggregator
+import com.annevonwolffen.gallery_impl.presentation.ImagesAggregatorImpl
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @Module
-object GalleryInternalModule {
-    @ExperimentalCoroutinesApi
+interface GalleryInternalModule {
+
     @PerFeature
-    @Provides
-    fun providePhotosInteractor(coroutineDispatchers: CoroutineDispatchers): ImagesInteractor {
-        val databaseReference = Firebase.database.reference
-            .child("dailyphotosdiary")
-            .child(Firebase.auth.currentUser?.uid.orEmpty())
+    @Binds
+    fun bindImagesAggregator(impl: ImagesAggregatorImpl): ImagesAggregator
 
-        val storageReference = Firebase.storage.reference
-            .child("dailyphotosdiary")
-            .child(Firebase.auth.currentUser?.uid.orEmpty())
+    companion object {
+        @ExperimentalCoroutinesApi
+        @PerFeature
+        @Provides
+        fun provideImagesInteractor(coroutineDispatchers: CoroutineDispatchers): ImagesInteractor {
+            val databaseReference = Firebase.database.reference
+                .child("dailyphotosdiary")
+                .child(Firebase.auth.currentUser?.uid.orEmpty())
 
-        return ImagesInteractorImpl(FirebaseImageRepository(coroutineDispatchers, databaseReference, storageReference))
+            val storageReference = Firebase.storage.reference
+                .child("dailyphotosdiary")
+                .child(Firebase.auth.currentUser?.uid.orEmpty())
+
+            return ImagesInteractorImpl(
+                FirebaseImageRepository(
+                    coroutineDispatchers,
+                    databaseReference,
+                    storageReference
+                )
+            )
+        }
     }
 }
