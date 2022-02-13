@@ -9,7 +9,7 @@ import com.annevonwolffen.gallery_impl.databinding.ImagesGroupLayoutBinding
 import com.annevonwolffen.gallery_impl.presentation.models.Image
 import com.annevonwolffen.gallery_impl.presentation.models.ImagesGroup
 import com.annevonwolffen.gallery_impl.presentation.utils.toCalendar
-import com.annevonwolffen.gallery_impl.presentation.utils.toString
+import com.annevonwolffen.gallery_impl.presentation.utils.toDateString
 import com.annevonwolffen.ui_utils_api.image.ImageLoader
 
 class ImagesGroupListAdapter(
@@ -43,7 +43,7 @@ class ImagesGroupListAdapter(
 
         fun bind(imagesGroup: ImagesGroup) {
             with(imagesGroup) {
-                binding.tvDate.text = date.toCalendar().toString(binding.root.resources)
+                binding.tvDate.text = date.toCalendar().toDateString(binding.root.resources)
                 imagesRecyclerView = binding.rvImages
                 val adapter = ImagesListAdapter(imageLoader, onClick)
                 imagesRecyclerView.adapter = adapter
