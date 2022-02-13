@@ -58,7 +58,7 @@ class ImagesListAdapter(
                 binding.tvDayOfWeek.text = date.toCalendar().toDayOfWeekString(binding.root.resources)
                 binding.tvDescription.text = description
                 imageLoader.loadImage(binding.ivPhoto, url, R.drawable.image_progress_loader)
-                binding.root.setOnClickListener { onClick.invoke(this) }
+                binding.content.setOnClickListener { onClick.invoke(this) }
             }
         }
     }
