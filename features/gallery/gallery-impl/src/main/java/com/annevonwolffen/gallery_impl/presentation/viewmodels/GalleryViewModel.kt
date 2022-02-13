@@ -3,23 +3,31 @@ package com.annevonwolffen.gallery_impl.presentation.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.annevonwolffen.gallery_impl.domain.Image
 import com.annevonwolffen.gallery_impl.domain.ImagesInteractor
+import com.annevonwolffen.gallery_impl.presentation.ImagesAggregator
 import com.annevonwolffen.gallery_impl.presentation.Result
 import com.annevonwolffen.gallery_impl.presentation.State
+import com.annevonwolffen.gallery_impl.presentation.models.ImagesGroup
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-class GalleryViewModel(imagesInteractor: ImagesInteractor) : ViewModel() {
+class GalleryViewModel(
+    imagesInteractor: ImagesInteractor,
+    imagesAggregator: ImagesAggregator
+) : ViewModel() {
 
-    val images: StateFlow<State<List<Image>>> = imagesInteractor.loadImages(TEST_FOLDER)
+    val images: StateFlow<State<List<ImagesGroup>>> = imagesInteractor.loadImages(TEST_FOLDER)
         .map {
             when (it) {
-                is Result.Success -> State.Success(it.value)
-                is Result.Error -> State.Error(it.errorMessage)
+                is Result.Success -> {
+                    State.Success(imagesAggregator.groupByDate(it.value))
+                }
+                is Result.Error -> {
+                    State.Error(it.errorMessage)
+                }
             }
         }
         .catch { t ->

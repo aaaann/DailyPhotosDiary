@@ -6,15 +6,17 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.annevonwolffen.gallery_impl.R
-import com.annevonwolffen.gallery_impl.databinding.PhotoCardLayoutBinding
-import com.annevonwolffen.gallery_impl.domain.Image
+import com.annevonwolffen.gallery_impl.databinding.ImageCardLayoutBinding
+import com.annevonwolffen.gallery_impl.presentation.models.Image
+import com.annevonwolffen.gallery_impl.presentation.utils.toCalendar
+import com.annevonwolffen.gallery_impl.presentation.utils.toString
 import com.annevonwolffen.ui_utils_api.image.ImageLoader
 
-class PhotosListAdapter(
+class ImagesListAdapter(
     private val imageLoader: ImageLoader,
     private val onClick: (Image) -> Unit
 ) :
-    ListAdapter<Image, PhotosListAdapter.ViewHolder>(DiffUtilCallback()) {
+    ListAdapter<Image, ImagesListAdapter.ViewHolder>(DiffUtilCallback()) {
 
     class DiffUtilCallback : DiffUtil.ItemCallback<Image>() {
         override fun areItemsTheSame(oldItem: Image, newItem: Image): Boolean = oldItem.id == newItem.id
@@ -28,7 +30,7 @@ class PhotosListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = PhotoCardLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ImageCardLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding, imageLoader, onClick)
     }
 
@@ -44,7 +46,7 @@ class PhotosListAdapter(
     }
 
     class ViewHolder(
-        private val binding: PhotoCardLayoutBinding,
+        private val binding: ImageCardLayoutBinding,
         private val imageLoader: ImageLoader,
         private val onClick: (Image) -> Unit
     ) :
