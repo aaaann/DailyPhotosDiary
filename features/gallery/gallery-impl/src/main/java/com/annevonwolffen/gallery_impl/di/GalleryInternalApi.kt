@@ -1,8 +1,8 @@
 package com.annevonwolffen.gallery_impl.di
 
 import com.annevonwolffen.di.Dependency
-import com.annevonwolffen.gallery_impl.domain.PhotosInteractor
+import com.annevonwolffen.gallery_impl.domain.ImagesInteractor
 
 interface GalleryInternalApi : Dependency {
-    val photosInteractor: PhotosInteractor
+    val imagesInteractor: ImagesInteractor
 }

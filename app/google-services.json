@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "835912592931",
+    "project_id": "petprojects-75b5d",
+    "storage_bucket": "petprojects-75b5d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:835912592931:android:a3bc6e4f73b62b6df04b96",
+        "android_client_info": {
+          "package_name": "com.annevonwolffen.dailyphotosdiary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "835912592931-b3b5a80g84k180dfan14ipmm1hdb1k5n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFajh8ENEK1_9Bt1nXhQQLC0TL0TCih5Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "835912592931-b3b5a80g84k180dfan14ipmm1hdb1k5n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

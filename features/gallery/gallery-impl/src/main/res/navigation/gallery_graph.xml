@@ -19,6 +19,12 @@
                 android:name="toolbar_title"
                 app:argType="string" />
 
+            <argument
+                android:name="image"
+                android:defaultValue="@null"
+                app:argType="com.annevonwolffen.gallery_impl.domain.Image"
+                app:nullable="true" />
+
         </action>
     </fragment>
 
@@ -35,6 +41,12 @@
         <argument
             android:name="toolbar_title"
             app:argType="string" />
+
+        <argument
+            android:name="image"
+            android:defaultValue="@null"
+            app:argType="com.annevonwolffen.gallery_impl.domain.Image"
+            app:nullable="true" />
 
     </fragment>
 

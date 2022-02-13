@@ -1,11 +1,29 @@
 <resources>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="reload">Попробовать снова</string>
     <string name="loading_error">Не удалось загрузить картинки</string>
     <string name="add_image_descr">Описание…</string>
-    <string name="add_image_title">Добавить картинку</string>
+    <string name="add_image_title">Добавить заметку</string>
+    <string name="edit_image_title">Редактировать заметку</string>
     <string name="save">Сохранить</string>
     <string name="from_camera">Камера</string>
     <string name="from_gallery">Галерея</string>
+
+    <string name="date_format">%1$d %2$s %3$d г.</string>
+    <string name="today">Сегодня</string>
+
+    <string-array name="months_genitive">
+        <item>"января"</item>
+        <item>"февраля"</item>
+        <item>"марта"</item>
+        <item>"апреля"</item>
+        <item>"мая"</item>
+        <item>"июня"</item>
+        <item>"июля"</item>
+        <item>"августа"</item>
+        <item>"сентября"</item>
+        <item>"октября"</item>
+        <item>"ноября"</item>
+        <item>"декабря"</item>
+    </string-array>
+
 </resources>

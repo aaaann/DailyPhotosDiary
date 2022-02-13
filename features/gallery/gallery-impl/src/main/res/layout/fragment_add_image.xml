@@ -3,26 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:padding="16dp">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:overScrollMode="never">
+        android:overScrollMode="never"
+        android:padding="16dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/iv_descr"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@drawable/ic_cloud_off_36"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="@android:color/black" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline"
@@ -31,28 +22,17 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_begin="48dp" />
 
-            <EditText
-                android:id="@+id/et_image_descr"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="top"
-                android:hint="@string/add_image_descr"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/guideline"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <ImageView
                 android:id="@+id/iv_date"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:layout_marginTop="24dp"
                 android:src="@drawable/ic_cloud_off_36"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_image_descr"
+                app:layout_constraintTop_toTopOf="parent"
                 app:tint="@android:color/black" />
 
             <TextView
-                android:id="@+id/tv_image_when"
+                android:id="@+id/tv_title_when"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Когда?"
@@ -65,10 +45,31 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
+                android:freezesText="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/guideline"
-                app:layout_constraintTop_toBottomOf="@id/tv_image_when"
+                app:layout_constraintTop_toBottomOf="@id/tv_title_when"
                 tools:text="Сегодня" />
+
+            <ImageView
+                android:id="@+id/iv_descr"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="24dp"
+                android:src="@drawable/ic_cloud_off_36"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_date"
+                app:tint="@android:color/black" />
+
+            <EditText
+                android:id="@+id/et_image_descr"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:hint="@string/add_image_descr"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/guideline"
+                app:layout_constraintTop_toTopOf="@id/iv_descr" />
 
             <ImageButton
                 android:id="@+id/btn_image"
@@ -77,7 +78,7 @@
                 android:layout_marginTop="24dp"
                 android:src="@drawable/ic_cloud_off_36"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_date"
+                app:layout_constraintTop_toBottomOf="@+id/iv_descr"
                 app:tint="@android:color/black" />
 
             <com.google.android.material.imageview.ShapeableImageView
@@ -94,5 +95,21 @@
 
     </androidx.core.widget.NestedScrollView>
 
+    <FrameLayout
+        android:id="@+id/progress_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.5"
+        android:background="@android:color/darker_gray"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
 
 </FrameLayout>
