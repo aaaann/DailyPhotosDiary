@@ -39,7 +39,7 @@ import com.annevonwolffen.gallery_impl.presentation.utils.createImageFile
 import com.annevonwolffen.gallery_impl.presentation.utils.getUriForFile
 import com.annevonwolffen.gallery_impl.presentation.utils.isEqualByDate
 import com.annevonwolffen.gallery_impl.presentation.utils.toCalendar
-import com.annevonwolffen.gallery_impl.presentation.utils.toString
+import com.annevonwolffen.gallery_impl.presentation.utils.toDateString
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.AddImageViewModel
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
 import com.annevonwolffen.ui_utils_api.extensions.setVisibility
@@ -116,7 +116,7 @@ class AddImageFragment : Fragment() {
         dateTextView = binding.tvDate
         if (dateTextView.text.isEmpty()) {
             dateTextView.text =
-                selectedCalendar.takeIf { !it.isEqualByDate(todayCalendar) }?.toString(resources)
+                selectedCalendar.takeIf { !it.isEqualByDate(todayCalendar) }?.toDateString(resources)
                     ?: getString(R.string.today)
         }
         dateTextView.setOnClickListener {
@@ -128,7 +128,7 @@ class AddImageFragment : Fragment() {
                         if (selectedCalendar.isEqualByDate(todayCalendar)) {
                             getString(R.string.today)
                         } else {
-                            selectedCalendar.toString(resources)
+                            selectedCalendar.toDateString(resources)
                         }
                 },
                 selectedCalendar.get(Calendar.YEAR),

@@ -15,12 +15,16 @@ fun Long.toDateWithoutTime(): Long = Calendar.getInstance()
         calendar.set(Calendar.MILLISECOND, 0)
     }.timeInMillis
 
-fun Calendar.toString(resources: Resources): String = resources.getString(
+fun Calendar.toDateString(resources: Resources): String = resources.getString(
     R.string.date_format,
     get(Calendar.DAY_OF_MONTH),
     resources.getMonthNameByIndex(Calendar.MONTH - 1),
     get(Calendar.YEAR)
 )
+
+fun Calendar.toDayOfWeekString(resources: Resources): String = resources.getStringArray(
+    R.array.days_of_week
+)[this.get(Calendar.DAY_OF_WEEK) - 1]
 
 fun Calendar.isEqualByDate(calendar: Calendar): Boolean =
     (this.get(Calendar.YEAR) == calendar.get(Calendar.YEAR)
