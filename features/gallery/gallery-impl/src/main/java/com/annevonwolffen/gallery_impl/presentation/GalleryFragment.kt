@@ -24,7 +24,6 @@ import com.annevonwolffen.gallery_impl.presentation.models.ImagesGroup
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.GalleryViewModel
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
 import com.annevonwolffen.ui_utils_api.extensions.setVisibility
-import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
