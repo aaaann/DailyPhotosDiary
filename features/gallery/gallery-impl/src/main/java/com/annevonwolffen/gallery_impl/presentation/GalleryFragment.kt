@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -23,6 +24,7 @@ import com.annevonwolffen.gallery_impl.presentation.models.ImagesGroup
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.GalleryViewModel
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
 import com.annevonwolffen.ui_utils_api.extensions.setVisibility
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -38,6 +40,7 @@ class GalleryFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var errorBanner: View
     private lateinit var addImageButton: FloatingActionButton
+    private lateinit var shimmerLayout: LinearLayout
 
     private val viewModel: GalleryViewModel by activityViewModels {
         object : ViewModelProvider.Factory {
@@ -67,6 +70,7 @@ class GalleryFragment : Fragment() {
         errorBanner = binding.errorBanner
         addImageButton = binding.btnAddImage
         addImageButton.setOnClickListener { addOrEditImage(null) }
+        shimmerLayout = binding.shimmerLayout.root
     }
 
     private fun setupRecyclerView() {
@@ -101,18 +105,18 @@ class GalleryFragment : Fragment() {
             is State.Loading -> {
                 errorBanner.setVisibility(false)
                 recyclerView.setVisibility(false)
-                // TODO: set shimmers visibility to true
+                shimmerLayout.setVisibility(true)
             }
             is State.Success -> {
                 errorBanner.setVisibility(false)
                 recyclerView.setVisibility(true)
                 adapter.submitList(state.value)
-                // TODO: set shimmers visibility to false
+                shimmerLayout.setVisibility(false)
             }
             is State.Error -> {
                 errorBanner.setVisibility(true)
                 recyclerView.setVisibility(false)
-                // TODO: set shimmers visibility to false
+                shimmerLayout.setVisibility(false)
             }
         }
     }
