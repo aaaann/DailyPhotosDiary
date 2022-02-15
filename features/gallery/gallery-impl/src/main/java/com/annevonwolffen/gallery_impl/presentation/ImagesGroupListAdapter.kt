@@ -3,6 +3,7 @@ package com.annevonwolffen.gallery_impl.presentation
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.annevonwolffen.gallery_impl.databinding.ImagesGroupLayoutBinding
@@ -45,6 +46,9 @@ class ImagesGroupListAdapter(
             with(imagesGroup) {
                 binding.tvDate.text = date.toCalendar().toDateString(binding.root.resources)
                 imagesRecyclerView = binding.rvImages
+                val snapHelper = LinearSnapHelper()
+                snapHelper.attachToRecyclerView(imagesRecyclerView)
+                imagesRecyclerView.onFlingListener = null
                 val adapter = ImagesListAdapter(imageLoader, onClick)
                 imagesRecyclerView.adapter = adapter
                 adapter.submitList(images)
