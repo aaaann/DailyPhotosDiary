@@ -6,7 +6,7 @@
     app:startDestination="@id/gallery_fragment">
 
     <fragment
-        android:id="@+id/gallery_fragment"
+        android:id="@id/gallery_fragment"
         android:name="com.annevonwolffen.gallery_impl.presentation.GalleryFragment"
         android:label="Дневник"
         tools:layout="@layout/fragment_gallery">

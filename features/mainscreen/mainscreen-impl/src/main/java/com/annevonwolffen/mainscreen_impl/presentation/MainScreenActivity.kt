@@ -13,6 +13,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.annevonwolffen.mainscreen_impl.R
 import com.annevonwolffen.mainscreen_impl.databinding.ActivityMainScreenBinding
 import com.google.android.material.navigation.NavigationView
+import com.annevonwolffen.gallery_api.R as GalleryR
 
 class MainScreenActivity : AppCompatActivity() {
 
@@ -32,7 +33,7 @@ class MainScreenActivity : AppCompatActivity() {
                 ?: return
         navController = navHostFragment.navController
 
-        setUpToolbar()
+        setUpAppbar()
         setUpNavView()
     }
 
@@ -41,10 +42,10 @@ class MainScreenActivity : AppCompatActivity() {
         sideNavView.setupWithNavController(navController)
     }
 
-    private fun setUpToolbar() {
+    private fun setUpAppbar() {
         val drawer: DrawerLayout = binding.drawerLayout
         appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.gallery_graph),
+            setOf(GalleryR.id.gallery_fragment),
             drawer
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
