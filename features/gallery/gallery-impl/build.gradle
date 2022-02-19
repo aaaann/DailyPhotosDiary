@@ -40,6 +40,7 @@ android {
 
 dependencies {
 
+    implementation project(':gallery-api')
     implementation project(':navigation')
     implementation project(':di')
     implementation project(':ui-utils-api')

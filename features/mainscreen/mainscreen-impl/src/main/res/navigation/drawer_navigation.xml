@@ -1,27 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation android:id="@+id/mobile_navigation"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<navigation xmlns:app="http://schemas.android.com/apk/res-auto"
     app:startDestination="@id/gallery_graph">
 
     <include app:graph="@navigation/gallery_graph" />
 
-    <fragment
-        android:id="@+id/nav_home"
-        android:name="com.annevonwolffen.mainscreen_impl.presentation.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
-
-    <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.annevonwolffen.mainscreen_impl.presentation.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery_1" />
-
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.annevonwolffen.mainscreen_impl.presentation.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
 </navigation>
