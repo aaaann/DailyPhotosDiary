@@ -16,4 +16,8 @@ class ImagesInteractorImpl @Inject constructor(private val imagesRepository: Ima
     override suspend fun uploadFileToStorage(folder: String, image: Image) {
         return imagesRepository.uploadFileToStorage(folder, image)
     }
+
+    override suspend fun deleteImage(folder: String, image: Image): Result<Unit> {
+        return imagesRepository.deleteImage(folder, image)
+    }
 }

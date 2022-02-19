@@ -85,6 +85,20 @@ class FirebaseImageRepository(
         }
     }
 
+    override suspend fun deleteImage(folder: String, image: Image): Result<Unit> {
+        val dbReference = rootDatabaseReference.child(folder).child(image.id.orEmpty())
+        return withContext(coroutineDispatchers.ioDispatcher) {
+            try {
+                dbReference.removeValue().await()
+                Log.d(TAG, "Объект $image успешно удален из Realtime Database")
+                Result.Success(Unit)
+            } catch (e: Exception) {
+                Log.d(TAG, "Ошибка при удалении объекта ${image.id} из Realtime Database, $e")
+                Result.Error(e.message)
+            }
+        }
+    }
+
     private companion object {
         const val TAG = "FirebaseImageRepository"
     }

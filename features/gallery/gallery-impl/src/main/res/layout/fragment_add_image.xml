@@ -112,4 +112,18 @@
 
     </FrameLayout>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="16dp"
+        android:background="@color/red_300"
+        android:gravity="center"
+        android:text="@string/delete_image"
+        app:icon="@drawable/ic_delete_24"
+        app:iconGravity="textStart"
+        app:iconPadding="6dp"
+        app:iconTint="@color/red_900" />
+
 </FrameLayout>
