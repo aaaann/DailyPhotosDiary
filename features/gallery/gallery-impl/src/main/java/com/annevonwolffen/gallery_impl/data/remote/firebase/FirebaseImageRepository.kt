@@ -85,7 +85,7 @@ class FirebaseImageRepository(
         }
     }
 
-    override suspend fun deleteImage(folder: String, image: Image): Result<Unit> {
+    override suspend fun deleteImageFromDatabase(folder: String, image: Image): Result<Unit> {
         val dbReference = rootDatabaseReference.child(folder).child(image.id.orEmpty())
         return withContext(coroutineDispatchers.ioDispatcher) {
             try {
@@ -96,6 +96,17 @@ class FirebaseImageRepository(
                 Log.d(TAG, "Ошибка при удалении объекта ${image.id} из Realtime Database, $e")
                 Result.Error(e.message)
             }
+        }
+    }
+
+    override suspend fun deleteFileFromStorage(folder: String, image: Image) {
+        val storageReference = rootStorageReference
+            .child(folder)
+            .child(image.name)
+        return withContext(coroutineDispatchers.ioDispatcher) {
+            runCatching {
+                storageReference.delete().await()
+            }.onFailure { t -> Log.d(TAG, "Ошибка при удалении картинки: ${t.message}") }
         }
     }
 

@@ -81,6 +81,7 @@ class AddImageViewModel(private val imagesInteractor: ImagesInteractor) : ViewMo
                 when (it) {
                     is Result.Success -> {
                         _imageDeletedEvent.send(State.Success(Unit))
+                        imagesInteractor.deleteFileFromStorage(TEST_FOLDER, image)
                     }
                     is Result.Error -> {
                         _imageDeletedEvent.send(State.Error(it.errorMessage))
