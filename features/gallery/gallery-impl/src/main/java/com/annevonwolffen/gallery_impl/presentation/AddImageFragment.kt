@@ -189,7 +189,7 @@ class AddImageFragment : Fragment() {
                 }
 
                 launchFlowCollection(viewModel.imageUploadedEvent) {
-                    processImageEvent(it, "Ошибка при загрузке сохранении изображения")
+                    processImageEvent(it, "Ошибка при сохранении изображения")
                 }
 
                 launchFlowCollection(viewModel.imageDeletedEvent) {
