@@ -22,8 +22,11 @@ class AddImageViewModel(private val imagesInteractor: ImagesInteractor) : ViewMo
     val fileFlow: StateFlow<File?> get() = _fileFlow
     private val _fileFlow: MutableStateFlow<File?> = MutableStateFlow(null)
 
-    val uploadedImageEvent get() = _uploadedImageEvent.receiveAsFlow()
-    private val _uploadedImageEvent = Channel<State<Unit>>(CONFLATED)
+    val imageUploadedEvent get() = _imageUploadedEvent.receiveAsFlow()
+    private val _imageUploadedEvent = Channel<State<Unit>>(CONFLATED)
+
+    val imageDeletedEvent get() = _imageDeletedEvent.receiveAsFlow()
+    private val _imageDeletedEvent = Channel<State<Unit>>(CONFLATED)
 
     val addImageEvent get() = _addImageEvent.receiveAsFlow()
     private val _addImageEvent = Channel<AddImage>(CONFLATED)
@@ -35,7 +38,13 @@ class AddImageViewModel(private val imagesInteractor: ImagesInteractor) : ViewMo
     private val _progressLoaderState = MutableStateFlow(false)
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        Log.w(TAG, "Ошибка при загрузке картинок: $throwable")
+        Log.w(TAG, "Ошибка при загрузке изображения: $throwable")
+        _progressLoaderState.value = false
+    }
+
+    private val deleteExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        Log.w(TAG, "Ошибка при удалении изображения: $throwable")
+        _progressLoaderState.value = false
     }
 
     fun setFile(file: File?) {
@@ -49,11 +58,11 @@ class AddImageViewModel(private val imagesInteractor: ImagesInteractor) : ViewMo
                 _progressLoaderState.value = false
                 when (it) {
                     is Result.Success -> {
-                        _uploadedImageEvent.send(State.Success(Unit))
+                        _imageUploadedEvent.send(State.Success(Unit))
                         imagesInteractor.uploadFileToStorage(TEST_FOLDER, image.copy(id = it.value))
                     }
                     is Result.Error -> {
-                        _uploadedImageEvent.send(State.Error(it.errorMessage))
+                        _imageUploadedEvent.send(State.Error(it.errorMessage))
                     }
                 }
             }
@@ -62,6 +71,23 @@ class AddImageViewModel(private val imagesInteractor: ImagesInteractor) : ViewMo
 
     fun addImage(addImageCommand: AddImage) {
         viewModelScope.launch { _addImageEvent.send(addImageCommand) }
+    }
+
+    fun deleteImage(image: Image) {
+        viewModelScope.launch(deleteExceptionHandler) {
+            _progressLoaderState.value = true
+            imagesInteractor.deleteImage(TEST_FOLDER, image).also {
+                _progressLoaderState.value = false
+                when (it) {
+                    is Result.Success -> {
+                        _imageDeletedEvent.send(State.Success(Unit))
+                    }
+                    is Result.Error -> {
+                        _imageDeletedEvent.send(State.Error(it.errorMessage))
+                    }
+                }
+            }
+        }
     }
 
     fun dismissBottomSheet() {

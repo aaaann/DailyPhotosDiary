@@ -44,6 +44,7 @@ import com.annevonwolffen.gallery_impl.presentation.viewmodels.AddImageViewModel
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
 import com.annevonwolffen.ui_utils_api.extensions.setVisibility
 import com.annevonwolffen.ui_utils_api.image.ImageLoader
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.launch
 import java.io.File
@@ -71,6 +72,7 @@ class AddImageFragment : Fragment() {
     private lateinit var description: EditText
     private lateinit var dateTextView: TextView
     private lateinit var progressLoader: FrameLayout
+    private lateinit var deleteButton: MaterialButton
 
     private var selectedCalendar: Calendar = Calendar.getInstance()
 
@@ -109,6 +111,8 @@ class AddImageFragment : Fragment() {
         addImageButton.setOnClickListener {
             findNavController().navigate(AddImageFragmentDirections.actionToAddImageBottomSheet())
         }
+
+        setupDeleteButton()
     }
 
     private fun setupDateField() {
@@ -138,6 +142,12 @@ class AddImageFragment : Fragment() {
             datePickerDialog.datePicker.maxDate = Calendar.getInstance().timeInMillis
             datePickerDialog.show()
         }
+    }
+
+    private fun setupDeleteButton() {
+        deleteButton = binding.btnDelete
+        deleteButton.setVisibility(image?.id != null)
+        image?.let { im -> deleteButton.setOnClickListener { viewModel.deleteImage(im.toDomain()) } }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -178,20 +188,12 @@ class AddImageFragment : Fragment() {
                     progressLoader.setVisibility(isLoading)
                 }
 
-                launchFlowCollection(viewModel.uploadedImageEvent) {
-                    when (it) {
-                        is State.Success -> {
-                            findNavController().popBackStack()
-                            viewModel.setFile(null)
-                        }
-                        is State.Error -> {
-                            Toast.makeText(
-                                activity,
-                                "Ошибка при загрузке картинки: ${it.errorMessage}",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    }
+                launchFlowCollection(viewModel.imageUploadedEvent) {
+                    processImageEvent(it, "Ошибка при загрузке сохранении изображения")
+                }
+
+                launchFlowCollection(viewModel.imageDeletedEvent) {
+                    processImageEvent(it, "Ошибка при удалении изображения")
                 }
 
                 launchFlowCollection(viewModel.addImageEvent) { addImageCommand ->
@@ -200,6 +202,29 @@ class AddImageFragment : Fragment() {
                         is AddImageBottomSheet.AddImage.FromGallery -> selectImageFromGallery()
                     }
                 }
+            }
+        }
+    }
+
+    private fun processImageEvent(state: State<Unit>, errorMessage: String) {
+        when (state) {
+            is State.Success -> {
+                findNavController().popBackStack()
+                viewModel.setFile(null)
+            }
+            is State.Error -> {
+                Toast.makeText(
+                    activity,
+                    "$errorMessage: ${state.errorMessage}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            else -> {
+                Toast.makeText(
+                    activity,
+                    errorMessage,
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
