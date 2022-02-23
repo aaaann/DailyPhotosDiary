@@ -46,6 +46,7 @@ dependencies {
     implementation project(':ui-utils-api')
     implementation project(':network-api')
     implementation project(':coroutine-utils-api')
+    implementation project(':preferences-api')
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
@@ -79,6 +80,7 @@ dependencies {
 
     implementation "com.facebook.shimmer:shimmer:$shimmer"
 
+    implementation "androidx.datastore:datastore-preferences:$dataStore"
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

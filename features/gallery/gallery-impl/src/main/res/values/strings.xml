@@ -11,6 +11,7 @@
     <string name="date_format">%1$d %2$s %3$d г.</string>
     <string name="today">Сегодня</string>
     <string name="delete_image">Удалить</string>
+    <string name="sort_by_date">Сортировать по дате</string>
 
     <string-array name="months_genitive">
         <item>"января"</item>

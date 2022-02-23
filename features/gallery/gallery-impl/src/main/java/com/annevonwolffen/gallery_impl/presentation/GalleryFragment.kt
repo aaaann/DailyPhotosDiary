@@ -3,6 +3,9 @@ package com.annevonwolffen.gallery_impl.presentation
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -44,7 +47,11 @@ class GalleryFragment : Fragment() {
     private val viewModel: GalleryViewModel by activityViewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return GalleryViewModel(galleryInternalApi.imagesInteractor, galleryInternalApi.imagesAggregator) as T
+                return GalleryViewModel(
+                    galleryInternalApi.imagesInteractor,
+                    galleryInternalApi.imagesAggregator,
+                    galleryInternalApi.settingsInteractor
+                ) as T
             } // TODO: create base ViewModelProviderFactory in some core module
         }
     }
@@ -53,6 +60,7 @@ class GalleryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(true)
         _binding = FragmentGalleryBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -118,6 +126,17 @@ class GalleryFragment : Fragment() {
                 shimmerLayout.setVisibility(false)
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_gallery, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.sort) {
+            viewModel.toggleImagesSort()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {

@@ -34,4 +34,5 @@ ext {
     retrofit = '2.9.0'
     loggingInterceptor = '4.2.1'
     shimmer = '0.5.0'
+    dataStore = '1.0.0'
 }
