@@ -1,10 +1,15 @@
 package com.annevonwolffen.gallery_impl.di
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.annevonwolffen.coroutine_utils_api.CoroutineDispatchers
 import com.annevonwolffen.di.PerFeature
+import com.annevonwolffen.gallery_impl.data.local.GallerySettingsRepositoryImpl
 import com.annevonwolffen.gallery_impl.data.remote.firebase.FirebaseImageRepository
 import com.annevonwolffen.gallery_impl.domain.ImagesInteractor
 import com.annevonwolffen.gallery_impl.domain.ImagesInteractorImpl
+import com.annevonwolffen.gallery_impl.domain.settings.GallerySettingsInteractor
+import com.annevonwolffen.gallery_impl.domain.settings.GallerySettingsInteractorImpl
 import com.annevonwolffen.gallery_impl.presentation.ImagesAggregator
 import com.annevonwolffen.gallery_impl.presentation.ImagesAggregatorImpl
 import com.google.firebase.auth.ktx.auth
@@ -43,6 +48,13 @@ interface GalleryInternalModule {
                     storageReference
                 )
             )
+        }
+
+        @PerFeature
+        @Provides
+        fun provideSettingsInteractor(dataStore: DataStore<Preferences>): GallerySettingsInteractor {
+            val settingsRepository = GallerySettingsRepositoryImpl(dataStore)
+            return GallerySettingsInteractorImpl(settingsRepository)
         }
     }
 }

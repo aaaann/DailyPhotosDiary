@@ -47,6 +47,8 @@ dependencies {
     implementation project(':network-impl')
     implementation project(':coroutine-utils-api')
     implementation project(':coroutine-utils-impl')
+    implementation project(':preferences-api')
+    implementation project(':preferences-impl')
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.0'
