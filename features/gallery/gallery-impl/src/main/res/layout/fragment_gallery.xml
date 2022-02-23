@@ -65,7 +65,6 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="24dp"
         android:layout_marginEnd="16dp"
-        android:backgroundTint="@android:color/darker_gray"
         android:src="@drawable/ic_add_24"
         android:tint="@android:color/white" />
 
