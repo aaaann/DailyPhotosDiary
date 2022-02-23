@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.DailyPhotosDiary" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.DailyPhotosDiary" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/color_green_300</item>
         <item name="colorPrimaryDark">@color/color_green_300_dark</item>
@@ -11,15 +11,21 @@
         <item name="android:colorBackground">@color/color_gray_150</item>
 
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/color_transparent</item>
 
-        <item name="actionBarTheme">@style/ThemeOverlay.DailyPhotosDiary.ActionBar</item>
+        <item name="actionBarTheme">@style/ThemeOverlay.DailyPhotosDiary.AppBar</item>
     </style>
 
-    <style name="ThemeOverlay.DailyPhotosDiary.ActionBar" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
+    <style name="ThemeOverlay.DailyPhotosDiary.AppBar" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
         <item name="colorControlNormal">@color/color_black</item>
         <item name="actionMenuTextColor">@color/color_black</item>
         <item name="android:textColorPrimary">@color/color_black</item>
+        <item name="actionButtonStyle">@style/Widget.DailyPhotosDiary.ActionButton</item>
+
+    </style>
+
+    <style name="Widget.DailyPhotosDiary.ActionButton" parent="Widget.AppCompat.ActionButton">
+        <item name="android:paddingEnd">@dimen/padding_medium</item>
     </style>
 
 </resources>
