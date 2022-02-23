@@ -22,6 +22,8 @@ include ':network-api'
 include ':network-impl'
 include ':coroutine-utils-api'
 include ':coroutine-utils-impl'
+include ':preferences-api'
+include ':preferences-impl'
 
 
 // Set a custom path for the modules.
@@ -40,3 +42,5 @@ project(":network-api").projectDir = new File(rootDir, "core/network/network-api
 project(":network-impl").projectDir = new File(rootDir, "core/network/network-impl")
 project(":coroutine-utils-api").projectDir = new File(rootDir, "core/coroutine-utils/coroutine-utils-api")
 project(":coroutine-utils-impl").projectDir = new File(rootDir, "core/coroutine-utils/coroutine-utils-impl")
+project(":preferences-api").projectDir = new File(rootDir, "core/preferences/preferences-api")
+project(":preferences-impl").projectDir = new File(rootDir, "core/preferences/preferences-impl")
