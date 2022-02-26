@@ -16,6 +16,7 @@ import com.annevonwolffen.mainscreen_impl.R
 import com.annevonwolffen.mainscreen_impl.databinding.ActivityMainScreenBinding
 import com.google.android.material.navigation.NavigationView
 import com.annevonwolffen.gallery_api.R as GalleryR
+import com.annevonwolffen.settings_api.R as SettingsR
 
 class MainScreenActivity : AppCompatActivity() {
 
@@ -51,7 +52,7 @@ class MainScreenActivity : AppCompatActivity() {
     private fun setUpAppbar() {
         val drawer: DrawerLayout = binding.drawerLayout
         appBarConfiguration = AppBarConfiguration(
-            setOf(GalleryR.id.gallery_fragment),
+            setOf(GalleryR.id.gallery_fragment, SettingsR.id.settings_fragment),
             drawer
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

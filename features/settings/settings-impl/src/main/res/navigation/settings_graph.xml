@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation android:id="@id/settings_graph"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/settings_fragment">
+
+    <fragment
+        android:id="@id/settings_fragment"
+        android:name="com.annevonwolffen.settings_impl.presentation.SettingsFragment"
+        android:label="@string/settings" />
+
+</navigation>

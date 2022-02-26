@@ -50,6 +50,8 @@ dependencies {
     implementation project(':preferences-api')
     implementation project(':preferences-impl')
     implementation project(':design-system')
+    implementation project(':settings-impl')
+    implementation project(':settings-api')
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.0'
