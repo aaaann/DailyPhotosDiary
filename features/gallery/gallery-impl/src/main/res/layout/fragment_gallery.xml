@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:overScrollMode="never"
-        android:paddingVertical="16dp"
+        android:paddingVertical="@dimen/padding_medium"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/images_group_layout" />
 
@@ -25,10 +25,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/margin_medium"
         android:visibility="gone"
         app:cardCornerRadius="8dp"
-        app:contentPadding="16dp"
+        app:contentPadding="@dimen/padding_medium"
         tools:visibility="visible">
 
         <LinearLayout
@@ -63,8 +63,8 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_gravity="bottom|end"
-        android:layout_marginBottom="24dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
         android:src="@drawable/ic_add_24"
         android:tint="@android:color/white" />
 
