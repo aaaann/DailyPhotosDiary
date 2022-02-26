@@ -6,4 +6,10 @@
 
     <!-- paddings end-->
 
+    <!-- margins -->
+    <dimen name="margin_medium">16dp</dimen>
+
+
+    <!-- margins end -->
+
 </resources>
