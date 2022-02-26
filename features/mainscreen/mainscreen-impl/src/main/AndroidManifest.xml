@@ -5,8 +5,7 @@
     <application>
         <activity
             android:name=".presentation.MainScreenActivity"
-            android:exported="false"
-            android:label="@string/title_activity_main_screen" />
+            android:exported="false" />
     </application>
 
 </manifest>
