@@ -2,6 +2,7 @@ package com.annevonwolffen.mainscreen_impl.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.updatePadding
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -10,6 +11,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.annevonwolffen.design_system.extensions.removeNavBarInset
 import com.annevonwolffen.mainscreen_impl.R
 import com.annevonwolffen.mainscreen_impl.databinding.ActivityMainScreenBinding
 import com.google.android.material.navigation.NavigationView
@@ -27,6 +29,10 @@ class MainScreenActivity : AppCompatActivity() {
         binding = ActivityMainScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
+
+        removeNavBarInset { _: Int, navigationBarSize: Int ->
+            binding.content.updatePadding(bottom = navigationBarSize)
+        }
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main_screen) as NavHostFragment?
