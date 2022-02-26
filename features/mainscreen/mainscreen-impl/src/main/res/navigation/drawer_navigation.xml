@@ -4,4 +4,6 @@
 
     <include app:graph="@navigation/gallery_graph" />
 
+    <include app:graph="@navigation/settings_graph" />
+
 </navigation>
