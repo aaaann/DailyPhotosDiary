@@ -59,15 +59,6 @@ class GalleryViewModel(
                 }
             }
         }
-    // .catch { t ->
-    //     Log.w(TAG, "Ошибка при получении изображений: $t")
-    //     State.Error(t.message)
-    // }
-    // .stateIn(
-    //     scope = viewModelScope,
-    //     started = SharingStarted.WhileSubscribed(5000),
-    //     initialValue = State.Loading
-    // )
 
     fun toggleImagesSort() {
         viewModelScope.launch {
