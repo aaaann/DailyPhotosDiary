@@ -29,12 +29,12 @@ class SettingsRepositoryImpl(
                 }
                 emit(emptyPreferences())
             }
-            .map { preferences -> preferences[NOTIFICATION_KEY] ?: true }
+            .map { preferences -> preferences[NOTIFICATION_KEY] ?: false }
 
     override suspend fun toggleNotification() {
         try {
             dataStore.edit { preferences ->
-                val currentValue: Boolean = preferences[NOTIFICATION_KEY] ?: true
+                val currentValue: Boolean = preferences[NOTIFICATION_KEY] ?: false
                 preferences[NOTIFICATION_KEY] = currentValue.not()
             }
         } catch (exception: Exception) {
