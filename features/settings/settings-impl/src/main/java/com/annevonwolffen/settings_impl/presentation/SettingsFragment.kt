@@ -18,10 +18,15 @@ import kotlinx.coroutines.flow.onEach
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
+    private val settingsInternalApi: SettingsInternalApi by lazy { getFeature(SettingsInternalApi::class.java) }
+
     private val viewModel: SettingsViewModel by activityViewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return SettingsViewModel(getFeature(SettingsInternalApi::class.java).settingsInteractor) as T
+                return SettingsViewModel(
+                    settingsInternalApi.settingsInteractor,
+                    settingsInternalApi.notificationWorkManager
+                ) as T
             }
         }
     }
@@ -41,7 +46,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 ?.apply {
                     setOnPreferenceChangeListener { _, newValue ->
                         Log.d(TAG, "Включено уведомление: $newValue")
-                        viewModel.toggleNotification()
+                        if (newValue is Boolean) {
+                            viewModel.toggleNotification(newValue)
+                        }
                         true
                     }
                 }
