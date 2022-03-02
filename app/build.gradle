@@ -41,6 +41,7 @@ dependencies {
     implementation project(':mainscreen-impl')
     implementation project(':navigation')
     implementation project(':gallery-impl')
+    implementation project(':gallery-api')
     implementation project(':ui-utils-api')
     implementation project(':ui-utils-impl')
     implementation project(':network-api')
