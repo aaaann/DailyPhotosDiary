@@ -44,6 +44,22 @@ class FirebaseImageRepository(
             .flowOn(coroutineDispatchers.ioDispatcher)
     }
 
+    override suspend fun getImages(folder: String): Result<List<Image>> {
+        val dbReference = rootDatabaseReference.child(folder)
+        return withContext(coroutineDispatchers.ioDispatcher) {
+            try {
+                dbReference.get().await().children
+                    .mapNotNull { snapshot ->
+                        val key = snapshot.key
+                        snapshot?.getValue(ImageEntry::class.java)?.run { toImage(key) }
+                    }.let { Result.Success(it) }
+            } catch (e: Exception) {
+                Log.d(TAG, "Ошибка при получении данных из Firebase Database: ${e.message}")
+                Result.Error(e.message)
+            }
+        }
+    }
+
     override suspend fun uploadImageToDatabase(folder: String, image: Image): Result<String> {
         val dbReference = rootDatabaseReference.child(folder)
         val generatedId = image.id ?: dbReference.push().key.orEmpty()

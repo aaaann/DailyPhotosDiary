@@ -6,7 +6,10 @@ import com.annevonwolffen.preferences_api.PreferencesApi
 import dagger.Component
 
 @PerFeature
-@Component(modules = [GalleryInternalModule::class], dependencies = [CoroutineUtilsApi::class, PreferencesApi::class])
+@Component(
+    modules = [GalleryInternalModule::class, GallerySettingsModule::class],
+    dependencies = [CoroutineUtilsApi::class, PreferencesApi::class]
+)
 interface GalleryComponent : GalleryInternalApi {
 
     @Component.Factory
