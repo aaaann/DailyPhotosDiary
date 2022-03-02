@@ -3,4 +3,7 @@
     <string name="daily_notification_key">daily_notification</string>
     <!-- preferences keys -->
 
+    <string name="notification_title">Загляните в дневник!</string>
+    <string name="notification_subtitle">Похоже, сегодня вы не&#160;добавили ни&#160;одной фото-заметки.</string>
+
 </resources>
