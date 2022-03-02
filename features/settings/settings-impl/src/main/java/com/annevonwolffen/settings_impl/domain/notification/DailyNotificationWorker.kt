@@ -11,17 +11,21 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.navigation.NavDeepLinkBuilder
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.gallery_api.di.GalleryExternalApi
+import com.annevonwolffen.settings_impl.R
+import com.annevonwolffen.design_system.R as DesignR
+import com.annevonwolffen.navigation.R as NavigationR
 
 class DailyNotificationWorker(private val appContext: Context, workerParameters: WorkerParameters) :
     CoroutineWorker(appContext, workerParameters) {
     override suspend fun doWork(): Result {
         Log.d(TAG, "doing work...")
         if (getFeature(GalleryExternalApi::class.java).imagesExternalInteractor
-                .hasImagesForToday(TEST_FOLDER)
+                .hasImagesForToday(TEST_FOLDER).not()
         ) {
             sendNotification()
         }
@@ -30,21 +34,21 @@ class DailyNotificationWorker(private val appContext: Context, workerParameters:
     }
 
     private fun sendNotification() {
-        // val intent = Intent(appContext, TasksActivity::class.java).apply {
-        //     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        // }
-        // val pendingIntent = PendingIntent.getActivity(appContext, 0, intent, 0)
-        //
-        // val manager: NotificationManager =
-        //     appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        //
-        // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        //     val notificationChannel = createChannel()
-        //     manager.createNotificationChannel(notificationChannel)
-        // }
-        //
-        // val notification = createNotificationBuilder(pendingIntent)
-        // manager.notify(1, notification)
+        val pendingIntent = NavDeepLinkBuilder(appContext)
+            .setGraph(NavigationR.navigation.main_nav_graph)
+            .setDestination(NavigationR.id.authorization_graph)
+            .createPendingIntent()
+
+        val manager: NotificationManager =
+            appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = createChannel()
+            manager.createNotificationChannel(notificationChannel)
+        }
+
+        val notification = createNotificationBuilder(pendingIntent)
+        manager.notify(1, notification)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -73,17 +77,15 @@ class DailyNotificationWorker(private val appContext: Context, workerParameters:
         )
             .setChannelId(NOTIFICATION_CHANNEL)
             .setContentIntent(pendingIntent)
-            // .setContentTitle(
-            //     appContext.getString(
-            //
-            //     )
-            // )
-            // .setContentText(appContext.getString(R.string.notification_text))
-            // .setSmallIcon(R.drawable.ic_check_24dp)
+            .setContentTitle(appContext.getString(R.string.notification_title))
+            .setContentText(appContext.getString(R.string.notification_subtitle))
+            .setSmallIcon(R.drawable.ic_photo_library_24)
+            .setColor(appContext.getColor(DesignR.color.color_green_300_dark))
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
             .setVibrate(longArrayOf(0, 100, 200, 300))
+            .setAutoCancel(true)
 
         return notificationBuilder.build()
     }
