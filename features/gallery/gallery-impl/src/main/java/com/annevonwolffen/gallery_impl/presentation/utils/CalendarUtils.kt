@@ -18,7 +18,7 @@ fun Long.toDateWithoutTime(): Long = Calendar.getInstance()
 fun Calendar.toDateString(resources: Resources): String = resources.getString(
     R.string.date_format,
     get(Calendar.DAY_OF_MONTH),
-    resources.getMonthNameByIndex(Calendar.MONTH - 1),
+    resources.getMonthNameByIndex(get(Calendar.MONTH)),
     get(Calendar.YEAR)
 )
 
