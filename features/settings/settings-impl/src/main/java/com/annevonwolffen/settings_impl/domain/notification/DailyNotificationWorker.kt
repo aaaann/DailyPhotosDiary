@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.media.AudioAttributes
 import android.media.RingtoneManager
 import android.os.Build
@@ -24,9 +25,10 @@ class DailyNotificationWorker(private val appContext: Context, workerParameters:
     CoroutineWorker(appContext, workerParameters) {
     override suspend fun doWork(): Result {
         Log.d(TAG, "doing work...")
-        if (getFeature(GalleryExternalApi::class.java).imagesExternalInteractor
-                .hasImagesForToday(TEST_FOLDER).not()
-        ) {
+        val hasImagesForToday = getFeature(GalleryExternalApi::class.java).imagesExternalInteractor
+            .hasImagesForToday(TEST_FOLDER)
+        Log.d(TAG, "hasImagesForToday: $hasImagesForToday")
+        if (hasImagesForToday?.not() == true) {
             sendNotification()
         }
 
@@ -81,6 +83,7 @@ class DailyNotificationWorker(private val appContext: Context, workerParameters:
             .setContentText(appContext.getString(R.string.notification_subtitle))
             .setSmallIcon(R.drawable.ic_photo_library_24)
             .setColor(appContext.getColor(DesignR.color.color_green_300_dark))
+            .setLargeIcon(BitmapFactory.decodeResource(appContext.resources, R.drawable.ic_photo_library_36))
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
