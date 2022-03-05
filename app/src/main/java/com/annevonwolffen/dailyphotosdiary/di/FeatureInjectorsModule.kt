@@ -1,6 +1,6 @@
 package com.annevonwolffen.dailyphotosdiary.di
 
-import com.annevonwolffen.authorization_impl.AuthorizationFeatureInjectorModule
+import com.annevonwolffen.authorization_impl.di.AuthorizationFeatureInjectorModule
 import com.annevonwolffen.coroutine_utils_impl.di.CoroutineUtilsFeatureInjectorModule
 import com.annevonwolffen.gallery_impl.di.GalleryFeatureInjectorModule
 import com.annevonwolffen.gallery_impl.di.external.GalleryExternalFeatureInjectorModule

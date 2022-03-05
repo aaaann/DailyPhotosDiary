@@ -37,4 +37,5 @@ ext {
     dataStore = '1.0.0'
     preference = '1.2.0'
     work = '2.7.1'
+    coroutinesPlayServices = '1.4.1'
 }
