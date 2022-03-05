@@ -1,4 +1,4 @@
-package com.annevonwolffen.authorization_impl
+package com.annevonwolffen.authorization_impl.di
 
 import com.annevonwolffen.authorization_api.AuthorizationApi
 import com.annevonwolffen.di.BaseFeatureInjector

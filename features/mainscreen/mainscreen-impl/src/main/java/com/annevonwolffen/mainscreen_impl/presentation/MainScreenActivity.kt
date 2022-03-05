@@ -52,7 +52,11 @@ class MainScreenActivity : AppCompatActivity() {
     private fun setUpAppbar() {
         val drawer: DrawerLayout = binding.drawerLayout
         appBarConfiguration = AppBarConfiguration(
-            setOf(GalleryR.id.gallery_fragment, SettingsR.id.settings_fragment),
+            setOf(
+                GalleryR.id.gallery_fragment,
+                SettingsR.id.settings_fragment,
+                com.annevonwolffen.navigation.R.id.authorization_graph
+            ),
             drawer
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

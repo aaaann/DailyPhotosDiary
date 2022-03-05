@@ -15,4 +15,13 @@
             android:icon="@drawable/ic_menu_settings_36"
             android:title="@string/settings" />
     </group>
+
+    <group>
+
+        <item
+            android:id="@id/authorization_graph"
+            android:icon="@drawable/ic_logout_36"
+            android:title="Выйти" />
+
+    </group>
 </menu>
