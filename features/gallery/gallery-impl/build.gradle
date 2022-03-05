@@ -77,7 +77,7 @@ dependencies {
     // Firebase Realtime Database SDK
     implementation 'com.google.firebase:firebase-database-ktx'
     // coroutines interop
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.4.1'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutinesPlayServices"
 
     implementation "com.facebook.shimmer:shimmer:$shimmer"
 

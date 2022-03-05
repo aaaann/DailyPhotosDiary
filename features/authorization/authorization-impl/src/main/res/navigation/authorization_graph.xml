@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/authorization_fragment"
-        android:name="com.annevonwolffen.authorization_impl.AuthorizationFragment"
+        android:name="com.annevonwolffen.authorization_impl.presentation.AuthorizationFragment"
         tools:layout="@layout/fragment_authorization">
 
         <action

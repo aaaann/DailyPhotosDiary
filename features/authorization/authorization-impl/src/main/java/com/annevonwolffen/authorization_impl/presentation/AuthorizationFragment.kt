@@ -1,4 +1,4 @@
-package com.annevonwolffen.authorization_impl
+package com.annevonwolffen.authorization_impl.presentation
 
 import android.os.Bundle
 import android.util.Log
@@ -10,14 +10,32 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.annevonwolffen.authorization_impl.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class AuthorizationFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
+
+    // private val viewModel: AuthorizationViewModel by viewModels<> {
+    //     object : ViewModelProvider.Factory {
+    //         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    //             return AuthorizationViewModel()
+    //         }
+    //     }
+    //
+    // }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +72,14 @@ class AuthorizationFragment : Fragment() {
             onSignedIn()
         }
     }
+
+    // private fun observeUser() {
+    //     viewLifecycleOwner.lifecycleScope.launch {
+    //         viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+    //             viewModel.images.collect { render(it) }
+    //         }
+    //     }
+    // }
 
     private fun signIn(view: View) {
         val email = view.findViewById<EditText>(R.id.et_email).text.toString()
