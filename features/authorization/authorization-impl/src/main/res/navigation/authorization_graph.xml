@@ -6,8 +6,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <fragment
-        android:id="@+id/authorization_fragment"
+        android:id="@id/authorization_fragment"
         android:name="com.annevonwolffen.authorization_impl.presentation.AuthorizationFragment"
+        android:label="Авторизация"
         tools:layout="@layout/fragment_authorization">
 
         <action

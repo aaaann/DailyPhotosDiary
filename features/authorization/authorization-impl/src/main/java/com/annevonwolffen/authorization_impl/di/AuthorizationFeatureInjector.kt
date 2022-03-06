@@ -1,6 +1,6 @@
 package com.annevonwolffen.authorization_impl.di
 
-import com.annevonwolffen.authorization_api.AuthorizationApi
+import com.annevonwolffen.authorization_api.di.AuthorizationApi
 import com.annevonwolffen.di.BaseFeatureInjector
 import com.annevonwolffen.di.FeaturesContainer
 

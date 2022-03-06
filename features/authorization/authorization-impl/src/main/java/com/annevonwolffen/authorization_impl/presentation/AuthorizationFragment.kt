@@ -1,12 +1,12 @@
 package com.annevonwolffen.authorization_impl.presentation
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -17,29 +17,27 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.annevonwolffen.authorization_api.di.AuthorizationApi
+import com.annevonwolffen.authorization_api.domain.AuthState
+import com.annevonwolffen.authorization_api.domain.Loading
+import com.annevonwolffen.authorization_api.domain.NotSignedIn
+import com.annevonwolffen.authorization_api.domain.SignedIn
 import com.annevonwolffen.authorization_impl.R
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.flow.collect
+import com.annevonwolffen.coroutine_utils_api.extension.launchFlowCollection
+import com.annevonwolffen.di.FeatureProvider.getFeature
+import com.annevonwolffen.ui_utils_api.extensions.setVisibility
 import kotlinx.coroutines.launch
 
 class AuthorizationFragment : Fragment() {
 
-    private lateinit var auth: FirebaseAuth
+    private lateinit var loadingScreen: FrameLayout
 
-    // private val viewModel: AuthorizationViewModel by viewModels<> {
-    //     object : ViewModelProvider.Factory {
-    //         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-    //             return AuthorizationViewModel()
-    //         }
-    //     }
-    //
-    // }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        auth = Firebase.auth
+    private val viewModel: AuthorizationViewModel by viewModels {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                return AuthorizationViewModel(getFeature(AuthorizationApi::class.java).authInteractor) as T
+            }
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -48,7 +46,7 @@ class AuthorizationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        isSignedIn()
+        observeAuthorizationFlows()
 
         view.findViewById<Button>(R.id.btn_sign_in).setOnClickListener {
             signIn(view)
@@ -63,61 +61,47 @@ class AuthorizationFragment : Fragment() {
         view.findViewById<Button>(R.id.btn_sign_up).setOnClickListener {
             signUp(view)
         }
+
+        loadingScreen = view.findViewById(R.id.progress_layout)
     }
 
-    private fun isSignedIn() {
-        if (auth.currentUser == null) {
-            Toast.makeText(context, "Not signed in", Toast.LENGTH_LONG).show() // make ui visible instead of toast
-        } else {
-            onSignedIn()
+    private fun observeAuthorizationFlows() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launchFlowCollection(viewModel.authFlow) { handleAuth(it) }
+
+                launchFlowCollection(viewModel.authorizationFailure) {
+                    Toast.makeText(activity, it, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
-
-    // private fun observeUser() {
-    //     viewLifecycleOwner.lifecycleScope.launch {
-    //         viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-    //             viewModel.images.collect { render(it) }
-    //         }
-    //     }
-    // }
 
     private fun signIn(view: View) {
         val email = view.findViewById<EditText>(R.id.et_email).text.toString()
         val password = view.findViewById<EditText>(R.id.et_password).text.toString()
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(requireActivity()) { task ->
-                if (task.isSuccessful) {
-                    Log.d(TAG, "signInWithEmail:success")
-                    onSignedIn()
-                } else {
-                    Log.w(TAG, "signInWithEmail:failure", task.exception)
-                    Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show()
-                }
-            }
+        viewModel.signIn(email, password)
     }
 
     private fun signUp(view: View) {
         val email = view.findViewById<EditText>(R.id.et_email).text.toString()
         val password = view.findViewById<EditText>(R.id.et_password).text.toString()
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(requireActivity()) { task ->
-                if (task.isSuccessful) {
-                    Log.d(TAG, "createUserWithEmail:success")
-                    onSignedIn()
-                } else {
-                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                    Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show()
-                }
+        viewModel.signUp(email, password)
+    }
+
+    private fun handleAuth(authState: AuthState) {
+        when (authState) {
+            is SignedIn -> {
+                findNavController().navigate(AuthorizationFragmentDirections.actionToMainScreen())
+                requireActivity().finish()
+                loadingScreen.setVisibility(false)
             }
-    }
-
-    private fun onSignedIn() {
-        Log.d(TAG, "Signed in, email - ${auth.currentUser?.email.toString()}, uid - ${auth.currentUser?.uid}")
-        findNavController().navigate(AuthorizationFragmentDirections.actionToMainScreen())
-        requireActivity().finish()
-    }
-
-    private companion object {
-        const val TAG = "AuthorizationFragment"
+            is NotSignedIn -> {
+                loadingScreen.setVisibility(false)
+            }
+            is Loading -> {
+                loadingScreen.setVisibility(true)
+            }
+        }
     }
 }
