@@ -1,15 +1,21 @@
 package com.annevonwolffen.authorization_impl.di
 
-import com.annevonwolffen.authorization_api.AuthorizationScreenRouter
-import com.annevonwolffen.authorization_impl.AuthorizationScreenRouterImpl
+import com.annevonwolffen.authorization_api.domain.AuthInteractor
+import com.annevonwolffen.authorization_impl.data.AuthRepositoryImpl
+import com.annevonwolffen.authorization_impl.domain.AuthInteractorImpl
 import com.annevonwolffen.di.PerFeature
-import dagger.Binds
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.Module
+import dagger.Provides
 
 @Module
-internal interface AuthorizationModule {
+object AuthorizationModule {
 
     @PerFeature
-    @Binds
-    fun bindAuthorizationRouter(authorizationScreenRouterImpl: AuthorizationScreenRouterImpl): AuthorizationScreenRouter
+    @Provides
+    fun provideAuthInteractor(): AuthInteractor {
+        val authRepository = AuthRepositoryImpl(Firebase.auth)
+        return AuthInteractorImpl(authRepository)
+    }
 }

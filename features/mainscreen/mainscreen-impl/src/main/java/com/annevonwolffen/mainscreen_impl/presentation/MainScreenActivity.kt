@@ -11,7 +11,9 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.annevonwolffen.authorization_api.di.AuthorizationApi
 import com.annevonwolffen.design_system.extensions.removeNavBarInset
+import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.mainscreen_impl.R
 import com.annevonwolffen.mainscreen_impl.databinding.ActivityMainScreenBinding
 import com.google.android.material.navigation.NavigationView
@@ -60,6 +62,13 @@ class MainScreenActivity : AppCompatActivity() {
             drawer
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+        // navController.addOnDestinationChangedListener { _, destination, _ ->
+        //     if (destination.id == com.annevonwolffen.authorization_api.R.id.authorization_fragment) {
+        //         getFeature(AuthorizationApi::class.java).authInteractor.signOut()
+        //         // finish()
+        //     }
+        // }
     }
 
     override fun onSupportNavigateUp(): Boolean {
