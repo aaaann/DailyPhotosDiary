@@ -2,10 +2,6 @@
 <manifest package="com.annevonwolffen.mainscreen_impl"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <application>
-        <activity
-            android:name=".presentation.MainScreenActivity"
-            android:exported="false" />
-    </application>
+
 
 </manifest>

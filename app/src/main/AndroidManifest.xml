@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DailyPhotosDiary">
         <activity
-            android:name=".presentation.StartActivity"
+            android:name="com.annevonwolffen.mainscreen_impl.presentation.MainScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
