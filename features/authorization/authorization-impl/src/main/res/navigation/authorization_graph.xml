@@ -11,12 +11,8 @@
         android:label="Авторизация"
         tools:layout="@layout/fragment_authorization">
 
-        <action
-            android:id="@+id/action_toMainScreen"
-            app:destination="@id/main_screen_graph" />
 
     </fragment>
 
-    <include app:graph="@navigation/main_screen_graph" />
 
 </navigation>

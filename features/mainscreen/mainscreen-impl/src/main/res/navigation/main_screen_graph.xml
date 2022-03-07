@@ -3,11 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/main_screen_activity">
+    app:startDestination="@id/main_screen_fragment">
 
-    <activity
-        android:id="@+id/main_screen_activity"
-        android:name="com.annevonwolffen.mainscreen_impl.presentation.MainScreenActivity"
-        tools:layout="@layout/activity_main_screen" />
+    <fragment
+        android:id="@+id/main_screen_fragment"
+        android:name="com.annevonwolffen.mainscreen_impl.presentation.MainScreenFragment"
+        android:label=""
+        tools:layout="@layout/fragment_main_screen" />
 
 </navigation>
