@@ -31,10 +31,9 @@ class MainScreenActivity : AppCompatActivity() {
 
         binding = ActivityMainScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.toolbar)
 
         removeNavBarInset { _: Int, navigationBarSize: Int ->
-            binding.content.updatePadding(bottom = navigationBarSize)
+            binding.root.updatePadding(bottom = navigationBarSize)
         }
 
         val navHostFragment =
@@ -42,36 +41,40 @@ class MainScreenActivity : AppCompatActivity() {
                 ?: return
         navController = navHostFragment.navController
 
-        setUpAppbar()
-        setUpNavView()
+        // setUpAppbar()
+        // setUpNavView()
     }
 
-    private fun setUpNavView() {
-        val sideNavView: NavigationView = binding.navView
-        sideNavView.setupWithNavController(navController)
-    }
+    // private fun setUpNavView() {
+    //     val sideNavView: NavigationView = binding.navView
+    //     sideNavView.setupWithNavController(navController)
+    // }
+    //
+    // private fun setUpAppbar() {
+    //     val drawer: DrawerLayout = binding.drawerLayout
+    //     appBarConfiguration = AppBarConfiguration(
+    //         setOf(
+    //             GalleryR.id.gallery_fragment,
+    //             SettingsR.id.settings_fragment
+    //         ),
+    //         drawer
+    //     )
+    //     setupActionBarWithNavController(navController, appBarConfiguration)
+    //
+    //     navController.addOnDestinationChangedListener { _, destination, _ ->
+    //         if (destination.id == com.annevonwolffen.authorization_api.R.id.authorization_fragment) {
+    //
+    //         }
+    //     }
+    // }
 
-    private fun setUpAppbar() {
-        val drawer: DrawerLayout = binding.drawerLayout
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                GalleryR.id.gallery_fragment,
-                SettingsR.id.settings_fragment,
-                com.annevonwolffen.navigation.R.id.authorization_graph
-            ),
-            drawer
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-
-        // navController.addOnDestinationChangedListener { _, destination, _ ->
-        //     if (destination.id == com.annevonwolffen.authorization_api.R.id.authorization_fragment) {
-        //         getFeature(AuthorizationApi::class.java).authInteractor.signOut()
-        //         // finish()
-        //     }
-        // }
-    }
+    // override fun onSupportNavigateUp(): Boolean {
+    //     return findNavController(R.id.nav_host_fragment_content_main_screen).navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    // }
 
     override fun onSupportNavigateUp(): Boolean {
-        return findNavController(R.id.nav_host_fragment_content_main_screen).navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+
+        return navController.navigateUp()
+            || super.onSupportNavigateUp()
     }
 }

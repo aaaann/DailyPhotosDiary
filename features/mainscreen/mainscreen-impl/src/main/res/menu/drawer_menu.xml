@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/main_items"
+        android:checkableBehavior="single">
 
         <item
             android:id="@id/gallery_graph"
@@ -16,7 +18,9 @@
             android:title="@string/settings" />
     </group>
 
-    <group>
+    <group
+        android:id="@+id/additional_items"
+        android:checkableBehavior="none">
 
         <item
             android:id="@id/authorization_graph"
