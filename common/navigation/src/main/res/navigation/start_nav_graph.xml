@@ -6,11 +6,17 @@
 
     <action
         android:id="@+id/action_global_mainScreen"
-        app:destination="@id/main_screen_graph" />
+        app:destination="@id/main_screen_graph"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popUpTo="@id/start_screen_graph" />
 
     <action
         android:id="@+id/action_global_authorization"
-        app:destination="@id/authorization_graph" />
+        app:destination="@id/authorization_graph"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popUpTo="@id/start_screen_graph" />
 
     <include app:graph="@navigation/main_screen_graph" />
     <include app:graph="@navigation/authorization_graph" />

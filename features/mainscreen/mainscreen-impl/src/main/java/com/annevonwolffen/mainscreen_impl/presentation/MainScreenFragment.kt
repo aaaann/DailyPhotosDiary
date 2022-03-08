@@ -4,13 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -18,7 +16,12 @@ import androidx.navigation.ui.setupWithNavController
 import com.annevonwolffen.authorization_api.di.AuthorizationApi
 import com.annevonwolffen.di.FeatureProvider
 import com.annevonwolffen.mainscreen_impl.R
+import com.annevonwolffen.navigation.activityNavController
+import com.annevonwolffen.navigation.navigateSafely
 import com.google.android.material.navigation.NavigationView
+import com.annevonwolffen.gallery_api.R as GalleryR
+import com.annevonwolffen.navigation.R as NavigationR
+import com.annevonwolffen.settings_api.R as SettingsR
 
 class MainScreenFragment : Fragment() {
 
@@ -53,9 +56,7 @@ class MainScreenFragment : Fragment() {
         sideNavView.setNavigationItemSelectedListener { menuItem ->
             if (menuItem.itemId == R.id.log_out) {
                 FeatureProvider.getFeature(AuthorizationApi::class.java).authInteractor.signOut()
-                requireActivity().findNavController(R.id.nav_host_fragment_content_main_screen).popBackStack()
-                requireActivity().findNavController(R.id.nav_host_fragment_content_main_screen)
-                    .navigate(R.id.action_global_authorization)
+                activityNavController().navigateSafely(NavigationR.id.action_global_authorization)
             } else {
                 NavigationUI.onNavDestinationSelected(menuItem, navController)
                 drawer.closeDrawer(GravityCompat.START)
@@ -68,8 +69,8 @@ class MainScreenFragment : Fragment() {
     private fun setUpAppbar(view: View) {
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                com.annevonwolffen.gallery_api.R.id.gallery_fragment,
-                com.annevonwolffen.settings_api.R.id.settings_fragment
+                GalleryR.id.gallery_fragment,
+                SettingsR.id.settings_fragment
             ),
             drawer
         )
