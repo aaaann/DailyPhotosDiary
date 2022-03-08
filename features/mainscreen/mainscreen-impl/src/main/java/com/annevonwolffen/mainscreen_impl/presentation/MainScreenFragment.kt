@@ -2,6 +2,7 @@ package com.annevonwolffen.mainscreen_impl.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
@@ -15,6 +16,7 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.annevonwolffen.authorization_api.di.AuthorizationApi
 import com.annevonwolffen.di.FeatureProvider
+import com.annevonwolffen.mainscreen_api.ToolbarFragment
 import com.annevonwolffen.mainscreen_impl.R
 import com.annevonwolffen.navigation.activityNavController
 import com.annevonwolffen.navigation.navigateSafely
@@ -23,14 +25,14 @@ import com.annevonwolffen.gallery_api.R as GalleryR
 import com.annevonwolffen.navigation.R as NavigationR
 import com.annevonwolffen.settings_api.R as SettingsR
 
-class MainScreenFragment : Fragment() {
+class MainScreenFragment : Fragment(), ToolbarFragment {
 
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var drawer: DrawerLayout
+    private lateinit var toolbar: Toolbar
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_main_screen, container, false)
     }
 
@@ -74,8 +76,16 @@ class MainScreenFragment : Fragment() {
             ),
             drawer
         )
-        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
+        toolbar = view.findViewById(R.id.toolbar)
         toolbar.setupWithNavController(navController, appBarConfiguration)
+    }
+
+    override fun inflateToolbarMenu(menuRes: Int, onMenuItemClickListener: (MenuItem) -> Boolean) {
+        toolbar.apply {
+            menu.clear()
+            inflateMenu(menuRes)
+            setOnMenuItemClickListener(onMenuItemClickListener)
+        }
     }
 }
 

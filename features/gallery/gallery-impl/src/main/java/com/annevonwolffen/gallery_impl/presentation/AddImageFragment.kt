@@ -8,8 +8,6 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -41,6 +39,7 @@ import com.annevonwolffen.gallery_impl.presentation.utils.isEqualByDate
 import com.annevonwolffen.gallery_impl.presentation.utils.toCalendar
 import com.annevonwolffen.gallery_impl.presentation.utils.toDateString
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.AddImageViewModel
+import com.annevonwolffen.mainscreen_api.ToolbarFragment
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
 import com.annevonwolffen.ui_utils_api.extensions.setVisibility
 import com.annevonwolffen.ui_utils_api.image.ImageLoader
@@ -84,7 +83,6 @@ class AddImageFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        setHasOptionsMenu(true)
         _binding = FragmentAddImageBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -96,6 +94,9 @@ class AddImageFragment : Fragment() {
                 ?: Calendar.getInstance()
         initViews()
         collectFlows()
+
+        (parentFragment?.parentFragment as? ToolbarFragment)
+            ?.inflateToolbarMenu(R.menu.menu_add_image) { onMenuItemSelected(it) }
     }
 
     private fun initViews() {
@@ -155,11 +156,7 @@ class AddImageFragment : Fragment() {
         super.onSaveInstanceState(outState)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_add_image, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    private fun onMenuItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.save) {
             val file = viewModel.fileFlow.value
             viewModel.saveImage(
