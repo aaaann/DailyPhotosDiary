@@ -3,8 +3,6 @@ package com.annevonwolffen.gallery_impl.presentation
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +23,7 @@ import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
 import com.annevonwolffen.gallery_impl.presentation.models.Image
 import com.annevonwolffen.gallery_impl.presentation.models.ImagesGroup
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.GalleryViewModel
+import com.annevonwolffen.mainscreen_api.ToolbarFragment
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
 import com.annevonwolffen.ui_utils_api.extensions.setVisibility
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -60,7 +59,6 @@ class GalleryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        setHasOptionsMenu(true)
         _binding = FragmentGalleryBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -71,6 +69,9 @@ class GalleryFragment : Fragment() {
         initViews()
         setupRecyclerView()
         collectImages()
+
+        (parentFragment?.parentFragment as? ToolbarFragment)
+            ?.inflateToolbarMenu(R.menu.menu_gallery) { onMenuItemSelected(it) }
     }
 
     private fun initViews() {
@@ -128,11 +129,7 @@ class GalleryFragment : Fragment() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_gallery, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    private fun onMenuItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.sort) {
             viewModel.toggleImagesSort()
         }
