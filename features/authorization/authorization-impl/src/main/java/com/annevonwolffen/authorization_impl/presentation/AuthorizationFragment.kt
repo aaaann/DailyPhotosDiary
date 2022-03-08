@@ -92,8 +92,8 @@ class AuthorizationFragment : Fragment() {
     private fun handleAuth(authState: AuthState) {
         when (authState) {
             is SignedIn -> {
-                findNavController().navigate(com.annevonwolffen.navigation.R.id.main_screen_graph)
-                // requireActivity().finish()
+                findNavController().popBackStack()
+                findNavController().navigate(com.annevonwolffen.navigation.R.id.main_screen_graph) // TODO: add global action in navigation module
                 loadingScreen.setVisibility(false)
             }
             is NotSignedIn -> {
