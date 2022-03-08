@@ -37,7 +37,7 @@ class DailyNotificationWorker(private val appContext: Context, workerParameters:
 
     private fun sendNotification() {
         val pendingIntent = NavDeepLinkBuilder(appContext)
-            .setGraph(NavigationR.navigation.main_nav_graph)
+            .setGraph(NavigationR.navigation.start_nav_graph)
             .setDestination(NavigationR.id.authorization_graph)
             .createPendingIntent()
 

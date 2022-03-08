@@ -71,10 +71,4 @@ class MainScreenActivity : AppCompatActivity() {
     // override fun onSupportNavigateUp(): Boolean {
     //     return findNavController(R.id.nav_host_fragment_content_main_screen).navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     // }
-
-    override fun onSupportNavigateUp(): Boolean {
-
-        return navController.navigateUp()
-            || super.onSupportNavigateUp()
-    }
 }
