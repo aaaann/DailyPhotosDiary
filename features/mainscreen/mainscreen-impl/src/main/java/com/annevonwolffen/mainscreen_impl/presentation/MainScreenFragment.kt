@@ -4,13 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.annevonwolffen.authorization_api.di.AuthorizationApi
 import com.annevonwolffen.di.FeatureProvider
@@ -21,6 +24,7 @@ class MainScreenFragment : Fragment() {
 
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var drawer: DrawerLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
@@ -36,6 +40,8 @@ class MainScreenFragment : Fragment() {
 
         navController = navHostFragment.navController
 
+        drawer = view.findViewById(R.id.drawer_layout)
+
         setUpAppbar(view)
         setUpNavView(view)
     }
@@ -44,10 +50,22 @@ class MainScreenFragment : Fragment() {
         val sideNavView: NavigationView = view.findViewById(R.id.nav_view)
         sideNavView.setupWithNavController(navController)
 
+        sideNavView.setNavigationItemSelectedListener { menuItem ->
+            if (menuItem.itemId == R.id.log_out) {
+                FeatureProvider.getFeature(AuthorizationApi::class.java).authInteractor.signOut()
+                requireActivity().findNavController(R.id.nav_host_fragment_content_main_screen).popBackStack()
+                requireActivity().findNavController(R.id.nav_host_fragment_content_main_screen)
+                    .navigate(R.id.action_global_authorization)
+            } else {
+                NavigationUI.onNavDestinationSelected(menuItem, navController)
+                drawer.closeDrawer(GravityCompat.START)
+            }
+
+            true
+        }
     }
 
     private fun setUpAppbar(view: View) {
-        val drawer: DrawerLayout = view.findViewById(R.id.drawer_layout)
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 com.annevonwolffen.gallery_api.R.id.gallery_fragment,
@@ -57,15 +75,6 @@ class MainScreenFragment : Fragment() {
         )
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
         toolbar.setupWithNavController(navController, appBarConfiguration)
-
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == com.annevonwolffen.navigation.R.id.authorization_graph) {
-                FeatureProvider.getFeature(AuthorizationApi::class.java).authInteractor.signOut()
-                navController.popBackStack()
-                // requireActivity().findNavController(R.id.nav_host_fragment_content_main_screen)
-                //     .navigate(R.id.action_global_authorization)
-            }
-        }
     }
 }
 

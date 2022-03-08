@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation android:id="@+id/start_screen_graph"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/authorization_graph">
+
+    <action
+        android:id="@+id/action_global_mainScreen"
+        app:destination="@id/main_screen_graph" />
+
+    <action
+        android:id="@+id/action_global_authorization"
+        app:destination="@id/authorization_graph" />
+
+    <include app:graph="@navigation/main_screen_graph" />
+    <include app:graph="@navigation/authorization_graph" />
+
+</navigation>
