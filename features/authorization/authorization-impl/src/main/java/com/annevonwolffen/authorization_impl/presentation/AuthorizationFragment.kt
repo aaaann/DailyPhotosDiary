@@ -16,7 +16,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import com.annevonwolffen.authorization_api.di.AuthorizationApi
 import com.annevonwolffen.authorization_api.domain.AuthState
 import com.annevonwolffen.authorization_api.domain.Loading
@@ -25,8 +24,11 @@ import com.annevonwolffen.authorization_api.domain.SignedIn
 import com.annevonwolffen.authorization_impl.R
 import com.annevonwolffen.coroutine_utils_api.extension.launchFlowCollection
 import com.annevonwolffen.di.FeatureProvider.getFeature
+import com.annevonwolffen.navigation.activityNavController
+import com.annevonwolffen.navigation.navigateSafely
 import com.annevonwolffen.ui_utils_api.extensions.setVisibility
 import kotlinx.coroutines.launch
+import com.annevonwolffen.navigation.R as NavigationR
 
 class AuthorizationFragment : Fragment() {
 
@@ -92,8 +94,7 @@ class AuthorizationFragment : Fragment() {
     private fun handleAuth(authState: AuthState) {
         when (authState) {
             is SignedIn -> {
-                findNavController().popBackStack()
-                findNavController().navigate(com.annevonwolffen.navigation.R.id.main_screen_graph) // TODO: add global action in navigation module
+                activityNavController().navigateSafely(NavigationR.id.action_global_mainScreen)
                 loadingScreen.setVisibility(false)
             }
             is NotSignedIn -> {
