@@ -2,17 +2,13 @@
 <navigation android:id="@id/authorization_graph"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:startDestination="@id/authorization_fragment"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/authorization_fragment">
 
     <fragment
-        android:id="@id/authorization_fragment"
+        android:id="@+id/authorization_fragment"
         android:name="com.annevonwolffen.authorization_impl.presentation.AuthorizationFragment"
         android:label="Авторизация"
-        tools:layout="@layout/fragment_authorization">
-
-
-    </fragment>
-
+        tools:layout="@layout/fragment_authorization" />
 
 </navigation>
