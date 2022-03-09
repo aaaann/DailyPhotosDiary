@@ -18,6 +18,7 @@ import androidx.work.WorkerParameters
 import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.gallery_api.di.GalleryExternalApi
 import com.annevonwolffen.settings_impl.R
+import com.annevonwolffen.settings_impl.di.SettingsInternalApi
 import com.annevonwolffen.design_system.R as DesignR
 import com.annevonwolffen.navigation.R as NavigationR
 
@@ -31,6 +32,8 @@ class DailyNotificationWorker(private val appContext: Context, workerParameters:
         if (hasImagesForToday?.not() == true) {
             sendNotification()
         }
+
+        getFeature(SettingsInternalApi::class.java).notificationWorkManager.scheduleNotification()
 
         return Result.success()
     }
