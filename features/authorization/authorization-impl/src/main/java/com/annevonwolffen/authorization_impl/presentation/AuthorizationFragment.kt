@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -54,10 +53,18 @@ class AuthorizationFragment : Fragment() {
             signIn(view)
         }
 
-        view.findViewById<TextView>(R.id.tv_no_account).setOnClickListener {
+        view.findViewById<Button>(R.id.btn_no_account).setOnClickListener {
             it.visibility = View.GONE
             view.findViewById<Button>(R.id.btn_sign_in).visibility = View.GONE
             view.findViewById<Button>(R.id.btn_sign_up).visibility = View.VISIBLE
+            view.findViewById<Button>(R.id.btn_has_account).visibility = View.VISIBLE
+        }
+
+        view.findViewById<Button>(R.id.btn_has_account).setOnClickListener {
+            it.visibility = View.GONE
+            view.findViewById<Button>(R.id.btn_sign_in).visibility = View.VISIBLE
+            view.findViewById<Button>(R.id.btn_sign_up).visibility = View.GONE
+            view.findViewById<Button>(R.id.btn_no_account).visibility = View.VISIBLE
         }
 
         view.findViewById<Button>(R.id.btn_sign_up).setOnClickListener {
