@@ -3,12 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/authorization_fragment">
+    app:startDestination="@id/auth_fragment">
 
     <fragment
-        android:id="@+id/authorization_fragment"
+        android:id="@+id/auth_fragment"
         android:name="com.annevonwolffen.authorization_impl.presentation.AuthorizationFragment"
-        android:label="Авторизация"
-        tools:layout="@layout/fragment_authorization" />
+        android:label=""
+        tools:layout="@layout/fragment_auth" />
 
 </navigation>
