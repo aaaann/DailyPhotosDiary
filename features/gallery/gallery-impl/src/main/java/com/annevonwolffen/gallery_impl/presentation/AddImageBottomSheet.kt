@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.flowWithLifecycle
@@ -23,7 +23,7 @@ class AddImageBottomSheet : BottomSheetDialogFragment() {
     private var _binding: BottomsheetAddImageBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: AddImageViewModel by activityViewModels {
+    private val viewModel: AddImageViewModel by viewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return AddImageViewModel(FeatureProvider.getFeature(GalleryInternalApi::class.java).imagesInteractor) as T

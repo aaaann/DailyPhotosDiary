@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -43,7 +43,7 @@ class GalleryFragment : Fragment() {
     private lateinit var addImageButton: FloatingActionButton
     private lateinit var shimmerLayout: LinearLayout
 
-    private val viewModel: GalleryViewModel by activityViewModels {
+    private val viewModel: GalleryViewModel by viewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return GalleryViewModel(

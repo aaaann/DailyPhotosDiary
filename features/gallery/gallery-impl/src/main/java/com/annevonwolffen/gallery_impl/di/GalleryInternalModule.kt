@@ -26,7 +26,6 @@ interface GalleryInternalModule {
 
     companion object {
         @ExperimentalCoroutinesApi
-        @PerFeature
         @Provides
         fun provideImagesRepository(coroutineDispatchers: CoroutineDispatchers): ImagesRepository {
             val databaseReference = Firebase.database.reference
@@ -45,7 +44,6 @@ interface GalleryInternalModule {
         }
 
         @ExperimentalCoroutinesApi
-        @PerFeature
         @Provides
         fun provideImagesInteractor(imagesRepository: ImagesRepository): ImagesInteractor {
             return ImagesInteractorImpl(imagesRepository)

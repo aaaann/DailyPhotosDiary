@@ -17,7 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -54,7 +54,7 @@ class AddImageFragment : Fragment() {
     private var _binding: FragmentAddImageBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: AddImageViewModel by activityViewModels {
+    private val viewModel: AddImageViewModel by viewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return AddImageViewModel(getFeature(GalleryInternalApi::class.java).imagesInteractor) as T
