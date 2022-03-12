@@ -12,6 +12,7 @@ import com.annevonwolffen.gallery_impl.domain.settings.getOpposite
 import com.annevonwolffen.gallery_impl.domain.settings.sortOrderByName
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
@@ -27,6 +28,10 @@ class GallerySettingsRepositoryImpl(private val dataStore: DataStore<Preferences
                 emit(emptyPreferences())
             }
             .map { preferences -> preferences[SORT_ORDER_KEY].sortOrderByName() }
+
+    override suspend fun getInitialSortOrder(): SortOrder {
+        return dataStore.data.first().toPreferences()[SORT_ORDER_KEY].sortOrderByName()
+    }
 
     override suspend fun toggleSortOrder() {
         try {

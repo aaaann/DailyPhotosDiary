@@ -2,6 +2,7 @@ package com.annevonwolffen.mainscreen_impl.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -80,12 +81,21 @@ class MainScreenFragment : Fragment(), ToolbarFragment {
         toolbar.setupWithNavController(navController, appBarConfiguration)
     }
 
-    override fun inflateToolbarMenu(menuRes: Int, onMenuItemClickListener: (MenuItem) -> Boolean) {
+    override fun inflateToolbarMenu(
+        menuRes: Int,
+        prepareOptionsMenu: ((Menu) -> Unit)?,
+        onMenuItemClickListener: (MenuItem) -> Boolean
+    ) {
         toolbar.apply {
             menu.clear()
             inflateMenu(menuRes)
+            menu.let { prepareOptionsMenu?.invoke(it) }
             setOnMenuItemClickListener(onMenuItemClickListener)
         }
+    }
+
+    override fun clearToolbarMenu() {
+        toolbar.menu.clear()
     }
 }
 

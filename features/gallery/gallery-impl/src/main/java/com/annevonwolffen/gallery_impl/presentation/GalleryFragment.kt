@@ -1,12 +1,16 @@
 package com.annevonwolffen.gallery_impl.presentation
 
+import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -20,6 +24,7 @@ import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.gallery_impl.R
 import com.annevonwolffen.gallery_impl.databinding.FragmentGalleryBinding
 import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
+import com.annevonwolffen.gallery_impl.domain.settings.SortOrder
 import com.annevonwolffen.gallery_impl.presentation.models.Image
 import com.annevonwolffen.gallery_impl.presentation.models.ImagesGroup
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.GalleryViewModel
@@ -71,7 +76,7 @@ class GalleryFragment : Fragment() {
         collectImages()
 
         (parentFragment?.parentFragment as? ToolbarFragment)
-            ?.inflateToolbarMenu(R.menu.menu_gallery) { onMenuItemSelected(it) }
+            ?.inflateToolbarMenu(R.menu.menu_gallery, { prepareOptionsMenu(it) }, { onMenuItemSelected(it) })
     }
 
     private fun initViews() {
@@ -129,11 +134,44 @@ class GalleryFragment : Fragment() {
         }
     }
 
+    private fun prepareOptionsMenu(menu: Menu) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.initialSortOrder.collect { sortOrder ->
+                    sortOrder?.let { it ->
+                        val sortItem = menu.findItem(R.id.sort)
+                        sortItem.icon = ContextCompat.getDrawable(
+                            requireContext(),
+                            selectSortIcon(it)
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     private fun onMenuItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.sort) {
+            item.icon = ContextCompat.getDrawable(
+                requireContext(),
+                selectSortIcon(viewModel.sortOrder)
+            )
+
+            val menuIcon = item.icon
+            if (menuIcon is Animatable) {
+                menuIcon.start()
+            }
             viewModel.toggleImagesSort()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    @DrawableRes
+    private fun selectSortIcon(sortOrder: SortOrder): Int {
+        return if (sortOrder == SortOrder.BY_DATE_DESCENDING)
+            R.drawable.anim_sort_by_date_ascending
+        else
+            R.drawable.anim_sort_by_date_descending
     }
 
     override fun onDestroyView() {

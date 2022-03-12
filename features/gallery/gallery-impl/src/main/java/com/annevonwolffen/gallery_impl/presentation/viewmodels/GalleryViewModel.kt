@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -25,8 +26,19 @@ class GalleryViewModel(
     private val settingsInteractor: GallerySettingsInteractor
 ) : ViewModel() {
 
+    val initialSortOrder: StateFlow<SortOrder?>
+        get() = flow { emit(settingsInteractor.getInitialSortOrder()) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = null
+            )
+
+    lateinit var sortOrder: SortOrder
+
     val images: StateFlow<State<List<ImagesGroup>>>
         get() = _images.combine(_sortOrder) { imagesState, order ->
+            sortOrder = order
             when (imagesState) {
                 is Result.Success -> {
                     State.Success(imagesAggregator.sortByDate(imagesState.value, order))

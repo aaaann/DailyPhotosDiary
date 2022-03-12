@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 class GallerySettingsInteractorImpl(private val settingsRepository: GallerySettingsRepository) :
     GallerySettingsInteractor {
     override val sortOrderFlow: Flow<SortOrder> = settingsRepository.sortOrderFlow
-
+    override suspend fun getInitialSortOrder(): SortOrder = settingsRepository.getInitialSortOrder()
     override suspend fun toggleSortOrder() = settingsRepository.toggleSortOrder()
 }

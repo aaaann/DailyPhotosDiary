@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.annevonwolffen.di.FeatureProvider.getFeature
+import com.annevonwolffen.mainscreen_api.ToolbarFragment
 import com.annevonwolffen.settings_impl.R
 import com.annevonwolffen.settings_impl.di.SettingsInternalApi
 import kotlinx.coroutines.flow.launchIn
@@ -38,6 +39,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         configureDailyNotificationSetting()
+
+        (parentFragment?.parentFragment as? ToolbarFragment)?.clearToolbarMenu()
     }
 
     private fun configureDailyNotificationSetting() {
