@@ -6,6 +6,8 @@ import com.annevonwolffen.navigation.R as NavR
 import com.annevonwolffen.mainscreen_impl.presentation.MainScreenFragment
 import io.github.kakaocup.kakao.drawer.KDrawerView
 import io.github.kakaocup.kakao.navigation.KNavigationView
+import com.annevonwolffen.mainscreen_impl.presentation.MainScreenFragment
+import io.github.kakaocup.kakao.drawer.KDrawerView
 import io.github.kakaocup.kakao.toolbar.KToolbar
 
 object MainScreen : KScreen<MainScreen>() {
