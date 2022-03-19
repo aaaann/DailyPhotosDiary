@@ -5,6 +5,8 @@ plugins {
     id 'com.google.gms.google-services'
 }
 
+apply from: "$rootDir/scripts/lint/lint.gradle"
+
 android {
     compileSdk 31
 
