@@ -1,0 +1,11 @@
+android {
+    lintOptions {
+        quiet true
+        abortOnError false
+        checkDependencies true
+        checkGeneratedSources false
+        disable 'MissingTranslation'
+        xmlOutput file("${project.rootDir}/build/reports/lint/lint-report.xml")
+        htmlOutput file("${project.rootDir}/build/reports/lint/lint-report.html")
+    }
+}
