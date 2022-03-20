@@ -27,6 +27,7 @@ include ':preferences-impl'
 include ':design-system'
 include ':settings-api'
 include ':settings-impl'
+include ':lint-checks'
 
 
 // Set a custom path for the modules.
