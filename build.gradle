@@ -64,4 +64,5 @@ ext {
     junit = '1.1.3'
     kaspresso = '1.2.1'
     mockk = '1.12.3'
+    lint = '30.0.4'
 }
