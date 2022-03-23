@@ -28,6 +28,7 @@ include ':design-system'
 include ':settings-api'
 include ':settings-impl'
 include ':lint-checks'
+include ':detektrules'
 
 
 // Set a custom path for the modules.

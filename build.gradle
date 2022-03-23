@@ -65,4 +65,5 @@ ext {
     kaspresso = '1.2.1'
     mockk = '1.12.3'
     lint = '30.0.4'
+    detekt = '1.19.0'
 }
