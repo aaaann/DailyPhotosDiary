@@ -17,7 +17,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -25,6 +24,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navGraphViewModels
 import com.annevonwolffen.coroutine_utils_api.extension.launchFlowCollection
 import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.gallery_impl.R
@@ -48,13 +48,14 @@ import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.launch
 import java.io.File
 import java.util.Calendar
+import com.annevonwolffen.navigation.R as NavR
 
 class AddImageFragment : Fragment() {
 
     private var _binding: FragmentAddImageBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: AddImageViewModel by viewModels {
+    private val viewModel: AddImageViewModel by navGraphViewModels(NavR.id.gallery_graph) {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return AddImageViewModel(getFeature(GalleryInternalApi::class.java).imagesInteractor) as T
