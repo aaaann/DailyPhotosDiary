@@ -9,4 +9,5 @@ interface PreferencesManager {
     suspend fun getBooleanPreferenceByKey(key: String): Boolean?
     suspend fun editStringPreferenceByKey(key: String, edit: (String?) -> String)
     suspend fun editBooleanPreferenceByKey(key: String, edit: (Boolean?) -> Boolean)
+    suspend fun clearPreferences()
 }

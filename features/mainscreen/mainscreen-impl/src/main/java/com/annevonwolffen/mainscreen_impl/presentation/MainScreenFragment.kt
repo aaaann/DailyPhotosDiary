@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -22,6 +23,7 @@ import com.annevonwolffen.mainscreen_impl.R
 import com.annevonwolffen.navigation.activityNavController
 import com.annevonwolffen.navigation.navigateSafely
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.launch
 import com.annevonwolffen.gallery_api.R as GalleryR
 import com.annevonwolffen.navigation.R as NavigationR
 import com.annevonwolffen.settings_api.R as SettingsR
@@ -58,8 +60,10 @@ class MainScreenFragment : Fragment(), ToolbarFragment {
 
         sideNavView.setNavigationItemSelectedListener { menuItem ->
             if (menuItem.itemId == R.id.log_out) {
-                FeatureProvider.getFeature(AuthorizationApi::class.java).authInteractor.signOut()
-                activityNavController().navigateSafely(NavigationR.id.action_global_authorization)
+                viewLifecycleOwner.lifecycleScope.launch {
+                    FeatureProvider.getFeature(AuthorizationApi::class.java).authInteractor.signOut()
+                    activityNavController().navigateSafely(NavigationR.id.action_global_authorization)
+                }
             } else {
                 NavigationUI.onNavDestinationSelected(menuItem, navController)
                 drawer.closeDrawer(GravityCompat.START)

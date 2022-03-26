@@ -71,6 +71,10 @@ class PreferencesManagerImpl(private val dataStore: DataStore<Preferences>) : Pr
         }
     }
 
+    override suspend fun clearPreferences() {
+        dataStore.edit { it.clear() }
+    }
+
     private companion object {
         const val TAG = "PreferencesInteractor"
     }
