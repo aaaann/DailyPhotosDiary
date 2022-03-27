@@ -9,7 +9,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navGraphViewModels
-import com.annevonwolffen.di.FeatureProvider
+import com.annevonwolffen.di.FeatureProvider.getInnerFeature
+import com.annevonwolffen.gallery_api.di.GalleryExternalApi
 import com.annevonwolffen.gallery_impl.R
 import com.annevonwolffen.gallery_impl.databinding.BottomsheetAddImageBinding
 import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
@@ -27,7 +28,12 @@ class AddImageBottomSheet : BottomSheetDialogFragment() {
     private val viewModel: AddImageViewModel by navGraphViewModels(NavR.id.gallery_graph) {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return AddImageViewModel(FeatureProvider.getFeature(GalleryInternalApi::class.java).imagesInteractor) as T
+                return AddImageViewModel(
+                    getInnerFeature(
+                        GalleryExternalApi::class,
+                        GalleryInternalApi::class
+                    ).imagesInteractor
+                ) as T
             } // TODO: create base ViewModelProviderFactory in some core module
         }
     }

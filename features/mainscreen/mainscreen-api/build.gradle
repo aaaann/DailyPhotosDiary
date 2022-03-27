@@ -9,7 +9,5 @@ java {
 }
 
 dependencies {
-    implementation project(':di')
-
     compileOnly androidJar
 }

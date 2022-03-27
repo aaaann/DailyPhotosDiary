@@ -10,6 +10,7 @@ import com.annevonwolffen.dailyphotosdiary.screens.SignInScreen
 import com.annevonwolffen.dailyphotosdiary.utils.lazyActivityScenarioRule
 import com.annevonwolffen.di.FeatureProvider
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
+import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
 
@@ -21,7 +22,7 @@ class MainScreenTest : TestCase() {
     @Test
     fun onGalleryScreen() {
         before {
-            FeatureProvider.getFeature(AuthorizationApi::class.java).authInteractor.signOut()
+            runBlocking { FeatureProvider.getFeature(AuthorizationApi::class).authInteractor.signOut() }
             rule.launch()
         }.after {
         }.run {
@@ -55,7 +56,7 @@ class MainScreenTest : TestCase() {
     @Test
     fun gotoSettingsScreen() {
         before {
-            FeatureProvider.getFeature(AuthorizationApi::class.java).authInteractor.signOut()
+            runBlocking { FeatureProvider.getFeature(AuthorizationApi::class).authInteractor.signOut() }
             rule.launch()
         }.after {
         }.run {

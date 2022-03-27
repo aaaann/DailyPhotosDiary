@@ -8,6 +8,6 @@ import com.annevonwolffen.preferences_api.PreferencesApi
 class AuthorizationFeatureInjector(featuresContainer: FeaturesContainer) :
     BaseFeatureInjector<AuthorizationApi>(featuresContainer) {
     override fun buildFeature(): AuthorizationApi {
-        return DaggerAuthorizationComponent.factory().create(getDependency(PreferencesApi::class.java))
+        return DaggerAuthorizationComponent.factory().create(getDependency(PreferencesApi::class))
     }
 }

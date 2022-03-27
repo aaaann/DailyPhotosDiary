@@ -26,14 +26,14 @@ class DailyNotificationWorker(private val appContext: Context, workerParameters:
     CoroutineWorker(appContext, workerParameters) {
     override suspend fun doWork(): Result {
         Log.d(TAG, "doing work...")
-        val hasImagesForToday = getFeature(GalleryExternalApi::class.java).imagesExternalInteractor
+        val hasImagesForToday = getFeature(GalleryExternalApi::class).imagesExternalInteractor
             .hasImagesForToday(TEST_FOLDER)
         Log.d(TAG, "hasImagesForToday: $hasImagesForToday")
         if (hasImagesForToday?.not() == true) {
             sendNotification()
         }
 
-        getFeature(SettingsInternalApi::class.java).notificationWorkManager.scheduleNotification()
+        getFeature(SettingsInternalApi::class).notificationWorkManager.scheduleNotification()
 
         return Result.success()
     }

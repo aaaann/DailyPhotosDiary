@@ -1,5 +1,7 @@
 package com.annevonwolffen.di
 
+import kotlin.reflect.KClass
+
 abstract class BaseFeatureInjector<T : Dependency>(private val featuresContainer: FeaturesContainer) :
     FeatureInjector<T> {
 
@@ -9,5 +11,5 @@ abstract class BaseFeatureInjector<T : Dependency>(private val featuresContainer
 
     protected abstract fun buildFeature(): T
 
-    protected fun <D : Dependency> getDependency(featureKey: Class<D>): D = featuresContainer.getFeature(featureKey)
+    protected fun <D : Dependency> getDependency(featureKey: KClass<D>): D = featuresContainer.getFeature(featureKey)
 }

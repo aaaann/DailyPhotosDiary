@@ -36,7 +36,7 @@ class SignUpFragment : Fragment() {
     private val viewModel: AuthorizationViewModel by viewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return AuthorizationViewModel(FeatureProvider.getFeature(AuthorizationApi::class.java).authInteractor) as T
+                return AuthorizationViewModel(FeatureProvider.getFeature(AuthorizationApi::class).authInteractor) as T
             }
         }
     }
