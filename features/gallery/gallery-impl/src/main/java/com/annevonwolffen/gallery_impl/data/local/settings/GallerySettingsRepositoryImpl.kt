@@ -1,4 +1,4 @@
-package com.annevonwolffen.gallery_impl.data.local
+package com.annevonwolffen.gallery_impl.data.local.settings
 
 import com.annevonwolffen.gallery_impl.domain.settings.GallerySettingsRepository
 import com.annevonwolffen.gallery_impl.domain.settings.SortOrder

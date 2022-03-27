@@ -60,7 +60,7 @@ class GalleryViewModel(
 
     private val _sortOrder: Flow<SortOrder> = settingsInteractor.sortOrderFlow
 
-    private val _images: Flow<Result<List<ImagesGroup>>> = imagesInteractor.loadImages(TEST_FOLDER)
+    private val _images: Flow<Result<List<ImagesGroup>>> = imagesInteractor.getImagesFlow(TEST_FOLDER)
         .map {
             when (it) {
                 is Result.Success -> {

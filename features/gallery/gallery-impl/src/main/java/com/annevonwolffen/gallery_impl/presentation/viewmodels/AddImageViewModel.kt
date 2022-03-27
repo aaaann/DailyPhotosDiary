@@ -54,7 +54,7 @@ class AddImageViewModel(private val imagesInteractor: ImagesInteractor) : ViewMo
     fun saveImage(image: Image) {
         viewModelScope.launch(exceptionHandler) {
             _progressLoaderState.value = true
-            imagesInteractor.uploadImageToDatabase(TEST_FOLDER, image).also {
+            imagesInteractor.uploadImage(TEST_FOLDER, image).also {
                 _progressLoaderState.value = false
                 when (it) {
                     is Result.Success -> {
