@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class GalleryViewModel(
+internal class GalleryViewModel(
     imagesInteractor: ImagesInteractor,
     private val imagesAggregator: ImagesAggregator,
     private val settingsInteractor: GallerySettingsInteractor

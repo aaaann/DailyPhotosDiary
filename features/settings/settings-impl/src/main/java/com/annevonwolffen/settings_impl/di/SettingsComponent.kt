@@ -8,7 +8,7 @@ import dagger.Component
 
 @PerFeature
 @Component(modules = [SettingsModule::class], dependencies = [PreferencesApi::class])
-interface SettingsComponent : SettingsInternalApi {
+internal interface SettingsComponent : SettingsInternalApi {
     @Component.Factory
     interface Factory {
         fun create(@BindsInstance context: Context, preferencesApi: PreferencesApi): SettingsComponent

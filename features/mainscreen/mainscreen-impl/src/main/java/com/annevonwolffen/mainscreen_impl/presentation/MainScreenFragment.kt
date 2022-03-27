@@ -61,7 +61,7 @@ class MainScreenFragment : Fragment(), ToolbarFragment {
         sideNavView.setNavigationItemSelectedListener { menuItem ->
             if (menuItem.itemId == R.id.log_out) {
                 viewLifecycleOwner.lifecycleScope.launch {
-                    FeatureProvider.getFeature(AuthorizationApi::class.java).authInteractor.signOut()
+                    FeatureProvider.getFeature(AuthorizationApi::class).authInteractor.signOut()
                     activityNavController().navigateSafely(NavigationR.id.action_global_authorization)
                 }
             } else {

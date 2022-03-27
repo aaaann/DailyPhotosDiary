@@ -21,6 +21,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.annevonwolffen.di.FeatureProvider.getFeature
+import com.annevonwolffen.di.FeatureProvider.getInnerFeature
+import com.annevonwolffen.gallery_api.di.GalleryExternalApi
 import com.annevonwolffen.gallery_impl.R
 import com.annevonwolffen.gallery_impl.databinding.FragmentGalleryBinding
 import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
@@ -40,7 +42,12 @@ class GalleryFragment : Fragment() {
     private var _binding: FragmentGalleryBinding? = null
     private val binding get() = _binding!!
 
-    private val galleryInternalApi: GalleryInternalApi by lazy { getFeature(GalleryInternalApi::class.java) }
+    private val galleryInternalApi: GalleryInternalApi by lazy {
+        getInnerFeature(
+            GalleryExternalApi::class,
+            GalleryInternalApi::class
+        )
+    }
 
     private lateinit var adapter: ImagesGroupListAdapter
     private lateinit var recyclerView: RecyclerView
@@ -89,7 +96,7 @@ class GalleryFragment : Fragment() {
     private fun setupRecyclerView() {
         recyclerView = binding.rvPhotos
         adapter =
-            ImagesGroupListAdapter(getFeature(UiUtilsApi::class.java).imageLoader) { image -> addOrEditImage(image) }
+            ImagesGroupListAdapter(getFeature(UiUtilsApi::class).imageLoader) { image -> addOrEditImage(image) }
         recyclerView.adapter = adapter
     }
 

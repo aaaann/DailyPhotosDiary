@@ -10,16 +10,22 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
-import com.annevonwolffen.di.FeatureProvider.getFeature
+import com.annevonwolffen.di.FeatureProvider.getInnerFeature
 import com.annevonwolffen.mainscreen_api.ToolbarFragment
+import com.annevonwolffen.settings_api.SettingsApi
 import com.annevonwolffen.settings_impl.R
 import com.annevonwolffen.settings_impl.di.SettingsInternalApi
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class SettingsFragment : PreferenceFragmentCompat() {
+internal class SettingsFragment : PreferenceFragmentCompat() {
 
-    private val settingsInternalApi: SettingsInternalApi by lazy { getFeature(SettingsInternalApi::class.java) }
+    private val settingsInternalApi: SettingsInternalApi by lazy {
+        getInnerFeature(
+            SettingsApi::class,
+            SettingsInternalApi::class
+        )
+    }
 
     private val viewModel: SettingsViewModel by activityViewModels {
         object : ViewModelProvider.Factory {

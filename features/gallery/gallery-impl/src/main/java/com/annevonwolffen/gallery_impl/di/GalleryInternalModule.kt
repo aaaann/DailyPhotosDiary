@@ -20,7 +20,7 @@ import dagger.Provides
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @Module
-interface GalleryInternalModule {
+internal interface GalleryInternalModule {
 
     @PerFeature
     @Binds

@@ -14,7 +14,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-object SettingsModule {
+internal object SettingsModule {
 
     @PerFeature
     @Provides

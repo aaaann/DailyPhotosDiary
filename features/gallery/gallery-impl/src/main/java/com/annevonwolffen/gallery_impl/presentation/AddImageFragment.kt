@@ -27,6 +27,8 @@ import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import com.annevonwolffen.coroutine_utils_api.extension.launchFlowCollection
 import com.annevonwolffen.di.FeatureProvider.getFeature
+import com.annevonwolffen.di.FeatureProvider.getInnerFeature
+import com.annevonwolffen.gallery_api.di.GalleryExternalApi
 import com.annevonwolffen.gallery_impl.R
 import com.annevonwolffen.gallery_impl.databinding.FragmentAddImageBinding
 import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
@@ -58,7 +60,12 @@ class AddImageFragment : Fragment() {
     private val viewModel: AddImageViewModel by navGraphViewModels(NavR.id.gallery_graph) {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return AddImageViewModel(getFeature(GalleryInternalApi::class.java).imagesInteractor) as T
+                return AddImageViewModel(
+                    getInnerFeature(
+                        GalleryExternalApi::class,
+                        GalleryInternalApi::class
+                    ).imagesInteractor
+                ) as T
             } // TODO: create base ViewModelProviderFactory in some core module
         }
     }
@@ -66,7 +73,7 @@ class AddImageFragment : Fragment() {
     private val args: AddImageFragmentArgs by navArgs()
     private val image: Image? by lazy { args.image }
 
-    private val imageLoader: ImageLoader by lazy { getFeature(UiUtilsApi::class.java).imageLoader }
+    private val imageLoader: ImageLoader by lazy { getFeature(UiUtilsApi::class).imageLoader }
 
     private lateinit var addedImage: ShapeableImageView
     private lateinit var description: EditText

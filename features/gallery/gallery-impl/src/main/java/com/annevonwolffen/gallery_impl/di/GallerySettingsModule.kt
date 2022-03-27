@@ -9,7 +9,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-object GallerySettingsModule {
+internal object GallerySettingsModule {
 
     @PerFeature
     @Provides

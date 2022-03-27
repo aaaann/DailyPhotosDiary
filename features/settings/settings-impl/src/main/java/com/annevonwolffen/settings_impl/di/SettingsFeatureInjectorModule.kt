@@ -5,6 +5,7 @@ import com.annevonwolffen.di.Dependency
 import com.annevonwolffen.di.DependencyKey
 import com.annevonwolffen.di.FeatureInjector
 import com.annevonwolffen.di.FeaturesContainer
+import com.annevonwolffen.settings_api.SettingsApi
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
@@ -16,7 +17,7 @@ object SettingsFeatureInjectorModule {
     @Singleton
     @Provides
     @IntoMap
-    @DependencyKey(SettingsInternalApi::class)
+    @DependencyKey(SettingsApi::class)
     fun provideSettingsFeatureInjector(
         featuresContainer: FeaturesContainer,
         appContext: Context

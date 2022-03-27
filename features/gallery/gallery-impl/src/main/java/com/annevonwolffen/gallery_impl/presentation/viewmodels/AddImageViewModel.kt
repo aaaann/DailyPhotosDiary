@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.io.File
 
-class AddImageViewModel(private val imagesInteractor: ImagesInteractor) : ViewModel() {
+internal class AddImageViewModel(private val imagesInteractor: ImagesInteractor) : ViewModel() {
 
     val fileFlow: StateFlow<File?> get() = _fileFlow
     private val _fileFlow: MutableStateFlow<File?> = MutableStateFlow(null)

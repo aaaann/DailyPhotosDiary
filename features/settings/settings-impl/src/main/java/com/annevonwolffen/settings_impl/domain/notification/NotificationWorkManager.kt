@@ -1,6 +1,6 @@
 package com.annevonwolffen.settings_impl.domain.notification
 
-interface NotificationWorkManager {
+internal interface NotificationWorkManager {
     fun scheduleNotification()
     fun cancelNotification()
 }

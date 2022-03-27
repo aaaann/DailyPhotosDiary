@@ -2,7 +2,7 @@ package com.annevonwolffen.settings_impl.domain
 
 import kotlinx.coroutines.flow.Flow
 
-interface SettingsInteractor {
+internal interface SettingsInteractor {
     val isNotificationEnabledFlow: Flow<Boolean>
     suspend fun toggleNotification()
 }
