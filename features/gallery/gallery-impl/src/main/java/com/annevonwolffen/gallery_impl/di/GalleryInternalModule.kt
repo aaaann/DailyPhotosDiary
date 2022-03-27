@@ -2,7 +2,9 @@ package com.annevonwolffen.gallery_impl.di
 
 import com.annevonwolffen.coroutine_utils_api.CoroutineDispatchers
 import com.annevonwolffen.di.PerFeature
-import com.annevonwolffen.gallery_impl.data.remote.firebase.FirebaseImageRepository
+import com.annevonwolffen.gallery_impl.data.ImagesRepositoryImpl
+import com.annevonwolffen.gallery_impl.data.remote.firebase.FirebaseRemoteDataSource
+import com.annevonwolffen.gallery_impl.data.remote.firebase.FirebaseRemoteFileStorage
 import com.annevonwolffen.gallery_impl.domain.ImagesInteractor
 import com.annevonwolffen.gallery_impl.domain.ImagesInteractorImpl
 import com.annevonwolffen.gallery_impl.domain.ImagesRepository
@@ -32,15 +34,15 @@ interface GalleryInternalModule {
                 .child("dailyphotosdiary")
                 .child(Firebase.auth.currentUser?.uid.orEmpty())
 
+            val remoteDataSource = FirebaseRemoteDataSource(databaseReference)
+
             val storageReference = Firebase.storage.reference
                 .child("dailyphotosdiary")
                 .child(Firebase.auth.currentUser?.uid.orEmpty())
 
-            return FirebaseImageRepository(
-                coroutineDispatchers,
-                databaseReference,
-                storageReference
-            )
+            val remoteFileStorage = FirebaseRemoteFileStorage(storageReference)
+
+            return ImagesRepositoryImpl(coroutineDispatchers, remoteDataSource, remoteFileStorage)
         }
 
         @ExperimentalCoroutinesApi
