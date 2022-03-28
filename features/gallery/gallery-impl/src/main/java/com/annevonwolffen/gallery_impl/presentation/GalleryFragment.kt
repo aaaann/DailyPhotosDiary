@@ -170,7 +170,7 @@ class GalleryFragment : Fragment() {
             }
             viewModel.toggleImagesSort()
         }
-        return super.onOptionsItemSelected(item)
+        return true
     }
 
     @DrawableRes
