@@ -126,19 +126,33 @@ class GalleryFragment : Fragment() {
                 errorBanner.setVisibility(false)
                 recyclerView.setVisibility(false)
                 shimmerLayout.setVisibility(true)
+                updateAddImageButtonState(false)
             }
             is State.Success -> {
                 errorBanner.setVisibility(false)
                 recyclerView.setVisibility(true)
                 adapter.submitList(state.value)
                 shimmerLayout.setVisibility(false)
+                updateAddImageButtonState(true)
             }
             is State.Error -> {
                 errorBanner.setVisibility(true)
                 recyclerView.setVisibility(false)
                 shimmerLayout.setVisibility(false)
+                updateAddImageButtonState(false)
             }
         }
+    }
+
+    private fun updateAddImageButtonState(isEnabled: Boolean) {
+        addImageButton.isEnabled = isEnabled
+        addImageButton.setBackgroundColor(
+            if (isEnabled) {
+                com.annevonwolffen.design_system.R.color.color_green_300_dark
+            } else {
+                R.color.gray_500
+            }
+        )
     }
 
     private fun prepareOptionsMenu(menu: Menu) {
