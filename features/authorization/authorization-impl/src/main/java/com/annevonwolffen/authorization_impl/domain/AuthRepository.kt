@@ -7,4 +7,5 @@ interface AuthRepository {
     suspend fun signIn(email: String, password: String): AuthState
     suspend fun signUp(email: String, password: String): AuthState
     fun signOut()
+    fun getUserEmail(): String
 }

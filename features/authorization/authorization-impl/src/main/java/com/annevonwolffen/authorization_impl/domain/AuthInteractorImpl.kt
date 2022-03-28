@@ -24,4 +24,8 @@ class AuthInteractorImpl(
         authRepository.signOut()
         preferencesManager.clearPreferences()
     }
+
+    override fun getUserEmail(): String {
+        return authRepository.getUserEmail()
+    }
 }

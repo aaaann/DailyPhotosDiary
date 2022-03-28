@@ -10,4 +10,7 @@
     <style name="TextAppearance.DailyPhotosDiary.Caption" parent="@style/TextAppearance.AppCompat.Caption">
         <item name="android:textSize">14sp</item>
     </style>
+    <style name="TextAppearance.DailyPhotosDiary.Caption.Black">
+        <item name="android:textColor">@color/color_black</item>
+    </style>
 </resources>
