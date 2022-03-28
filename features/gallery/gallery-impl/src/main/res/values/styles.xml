@@ -11,14 +11,19 @@
     </style>
 
     <style name="Widget.BottomSheet" parent="Widget.MaterialComponents.BottomSheet">
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay</item>
+        <item name="shapeAppearanceOverlay">@style/DailyPhotosDiary.ShapeAppearanceOverlay</item>
     </style>
 
-    <style name="ShapeAppearanceOverlay" parent="">
+    <style name="DailyPhotosDiary.ShapeAppearanceOverlay" parent="">
         <item name="cornerSize">0dp</item>
         <item name="cornerFamilyTopLeft">rounded</item>
         <item name="cornerFamilyTopRight">rounded</item>
         <item name="cornerSizeTopRight">16dp</item>
         <item name="cornerSizeTopLeft">16dp</item>
+    </style>
+
+    <style name="Widget.DailyPhotosDiary.EditText" parent="@style/Widget.AppCompat.EditText">
+        <item name="android:background">@color/color_white</item>
+        <item name="android:textCursorDrawable">@null</item>
     </style>
 </resources>

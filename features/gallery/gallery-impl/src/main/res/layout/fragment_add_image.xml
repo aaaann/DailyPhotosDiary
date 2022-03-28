@@ -63,18 +63,31 @@
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_pen_36"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_date"
+                app:layout_constraintTop_toBottomOf="@id/tv_date"
                 app:tint="@color/color_green_300_dark" />
 
-            <EditText
-                android:id="@+id/et_image_descr"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/image_descr_card_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="top"
-                android:hint="@string/add_image_descr"
+                android:elevation="2dp"
+                app:cardCornerRadius="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/guideline"
-                app:layout_constraintTop_toTopOf="@id/iv_descr" />
+                app:layout_constraintTop_toTopOf="@id/iv_descr">
+
+                <EditText
+                    android:id="@+id/et_image_descr"
+                    style="@style/Widget.DailyPhotosDiary.EditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:hint="@string/add_image_descr"
+                    android:importantForAutofill="no"
+                    android:inputType="textMultiLine|textNoSuggestions|textAutoComplete"
+                    android:minHeight="64dp"
+                    android:padding="@dimen/padding_small" />
+            </androidx.cardview.widget.CardView>
 
             <ImageButton
                 android:id="@+id/btn_image"
@@ -85,7 +98,7 @@
                 android:contentDescription="@string/add_image"
                 android:src="@drawable/ic_image_plus_36"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_descr"
+                app:layout_constraintTop_toBottomOf="@+id/image_descr_card_view"
                 app:tint="@color/color_green_300_dark" />
 
             <com.google.android.material.imageview.ShapeableImageView

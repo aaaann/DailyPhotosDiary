@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
@@ -87,6 +89,8 @@ class AddImageFragment : Fragment() {
         if (result.resultCode == Activity.RESULT_OK) {
             result.data?.data?.also { viewModel.setFile(createFileFromUri(it, requireContext())) }
             viewModel.dismissBottomSheet()
+        } else {
+            viewModel.setFile(null)
         }
     }
 
@@ -102,9 +106,12 @@ class AddImageFragment : Fragment() {
                 ?: Calendar.getInstance()
         initViews()
         collectFlows()
+        inflateToolbarMenu()
+    }
 
+    private fun inflateToolbarMenu() {
         (parentFragment?.parentFragment as? ToolbarFragment)
-            ?.inflateToolbarMenu(R.menu.menu_add_image) { onMenuItemSelected(it) }
+            ?.inflateToolbarMenu(R.menu.menu_add_image, { prepareOptionsMenu(it) }, { onMenuItemSelected(it) })
     }
 
     private fun initViews() {
@@ -165,6 +172,12 @@ class AddImageFragment : Fragment() {
         super.onSaveInstanceState(outState)
     }
 
+    private fun prepareOptionsMenu(menu: Menu) {
+        val saveButton = menu.findItem(R.id.save)
+        val isImageEmpty: Boolean = (viewModel.fileFlow.value ?: image?.url) == null
+        saveButton.isVisible = isImageEmpty.not() && progressLoader.isVisible.not()
+    }
+
     private fun onMenuItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.save) {
             val file = viewModel.fileFlow.value
@@ -178,7 +191,7 @@ class AddImageFragment : Fragment() {
                 ).toDomain()
             )
         }
-        return super.onOptionsItemSelected(item)
+        return true
     }
 
     private fun collectFlows() {
@@ -188,10 +201,12 @@ class AddImageFragment : Fragment() {
                     file?.let {
                         imageLoader.loadImage(addedImage, file)
                     } ?: imageLoader.loadImage(addedImage, image?.url)
+                    inflateToolbarMenu()
                 }
 
                 launchFlowCollection(viewModel.progressLoaderState) { isLoading ->
                     progressLoader.setVisibility(isLoading)
+                    inflateToolbarMenu()
                 }
 
                 launchFlowCollection(viewModel.imageUploadedEvent) {
