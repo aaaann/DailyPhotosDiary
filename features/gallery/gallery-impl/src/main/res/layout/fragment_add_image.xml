@@ -9,11 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never"
-        android:padding="16dp">
+        android:padding="@dimen/padding_medium">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/padding_small">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline"
@@ -24,18 +25,20 @@
 
             <ImageView
                 android:id="@+id/iv_date"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@drawable/ic_cloud_off_36"
+                android:layout_width="@dimen/icon_size_default"
+                android:layout_height="@dimen/icon_size_default"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_calendar_36"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@android:color/black" />
+                app:tint="@color/color_green_300_dark" />
 
             <TextView
                 android:id="@+id/tv_title_when"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Когда?"
+                android:text="@string/when"
+                android:textAppearance="@style/TextAppearance.DailyPhotosDiary.Caption"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/guideline"
                 app:layout_constraintTop_toTopOf="@id/iv_date" />
@@ -46,6 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:freezesText="true"
+                android:textAppearance="@style/TextAppearance.DailyPhotosDiary.Default.Colored"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/guideline"
                 app:layout_constraintTop_toBottomOf="@id/tv_title_when"
@@ -53,13 +57,14 @@
 
             <ImageView
                 android:id="@+id/iv_descr"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="@dimen/icon_size_default"
+                android:layout_height="@dimen/icon_size_default"
                 android:layout_marginTop="24dp"
-                android:src="@drawable/ic_cloud_off_36"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_pen_36"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_date"
-                app:tint="@android:color/black" />
+                app:tint="@color/color_green_300_dark" />
 
             <EditText
                 android:id="@+id/et_image_descr"
@@ -73,13 +78,15 @@
 
             <ImageButton
                 android:id="@+id/btn_image"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="@dimen/icon_size_default"
+                android:layout_height="@dimen/icon_size_default"
                 android:layout_marginTop="24dp"
-                android:src="@drawable/ic_cloud_off_36"
+                android:background="@null"
+                android:contentDescription="@string/add_image"
+                android:src="@drawable/ic_image_plus_36"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_descr"
-                app:tint="@android:color/black" />
+                app:tint="@color/color_green_300_dark" />
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/iv_added_image"
