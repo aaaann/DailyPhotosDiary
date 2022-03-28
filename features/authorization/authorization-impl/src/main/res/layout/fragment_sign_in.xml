@@ -39,7 +39,7 @@
                 android:layout_marginTop="@dimen/margin_medium"
                 android:paddingBottom="4dp"
                 android:paddingTop="4dp"
-                android:text="Нет аккаунта"
+                android:text="@string/no_account"
                 android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="@id/btn_sign_in"
                 app:layout_constraintStart_toStartOf="@id/btn_sign_in"
@@ -52,7 +52,7 @@
                 android:layout_marginTop="@dimen/margin_medium"
                 android:paddingBottom="14dp"
                 android:paddingTop="14dp"
-                android:text="Войти"
+                android:text="@string/sign_in"
                 android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="@id/input_email"
                 app:layout_constraintStart_toStartOf="@id/input_email"
@@ -63,11 +63,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:hint="Пароль"
-                app:passwordToggleEnabled="true"
+                android:hint="@string/password"
                 app:layout_constraintEnd_toEndOf="@id/input_email"
                 app:layout_constraintStart_toStartOf="@id/input_email"
-                app:layout_constraintTop_toBottomOf="@id/input_email">
+                app:layout_constraintTop_toBottomOf="@id/input_email"
+                app:passwordToggleEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_password"
@@ -82,7 +82,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:layout_marginStart="@dimen/margin_medium"
-                android:hint="E-mail"
+                android:autofillHints="emailAddress"
+                android:hint="@string/e_mail"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">

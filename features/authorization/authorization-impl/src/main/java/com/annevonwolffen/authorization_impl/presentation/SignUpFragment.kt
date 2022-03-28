@@ -23,6 +23,7 @@ import com.annevonwolffen.authorization_api.domain.NotSignedIn
 import com.annevonwolffen.authorization_api.domain.SignedIn
 import com.annevonwolffen.authorization_impl.R
 import com.annevonwolffen.coroutine_utils_api.extension.launchFlowCollection
+import com.annevonwolffen.design_system.extensions.hideKeyboard
 import com.annevonwolffen.di.FeatureProvider
 import com.annevonwolffen.navigation.activityNavController
 import com.annevonwolffen.navigation.navigateSafely
@@ -88,6 +89,7 @@ class SignUpFragment : Fragment() {
             is SignedIn -> {
                 activityNavController().navigateSafely(com.annevonwolffen.navigation.R.id.action_global_mainScreen)
                 loadingScreen.setVisibility(false)
+                requireActivity().hideKeyboard()
             }
             is NotSignedIn -> {
                 loadingScreen.setVisibility(false)

@@ -28,6 +28,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import com.annevonwolffen.coroutine_utils_api.extension.launchFlowCollection
+import com.annevonwolffen.design_system.extensions.hideKeyboard
 import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.di.FeatureProvider.getInnerFeature
 import com.annevonwolffen.gallery_api.di.GalleryExternalApi
@@ -190,6 +191,7 @@ class AddImageFragment : Fragment() {
                     url = file?.getUriForFile(requireContext())?.toString() ?: image?.url.orEmpty()
                 ).toDomain()
             )
+            requireActivity().hideKeyboard()
         }
         return true
     }
