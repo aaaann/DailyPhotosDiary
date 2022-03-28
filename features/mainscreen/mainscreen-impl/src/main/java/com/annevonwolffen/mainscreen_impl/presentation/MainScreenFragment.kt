@@ -17,6 +17,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.annevonwolffen.authorization_api.di.AuthorizationApi
+import com.annevonwolffen.design_system.extensions.setStatusBarColor
 import com.annevonwolffen.di.FeatureProvider
 import com.annevonwolffen.mainscreen_api.ToolbarFragment
 import com.annevonwolffen.mainscreen_impl.R
@@ -27,6 +28,7 @@ import kotlinx.coroutines.launch
 import com.annevonwolffen.gallery_api.R as GalleryR
 import com.annevonwolffen.navigation.R as NavigationR
 import com.annevonwolffen.settings_api.R as SettingsR
+import com.annevonwolffen.design_system.R as DesignR
 
 class MainScreenFragment : Fragment(), ToolbarFragment {
 
@@ -41,6 +43,8 @@ class MainScreenFragment : Fragment(), ToolbarFragment {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        requireActivity().setStatusBarColor(DesignR.color.color_transparent)
 
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main_screen) as NavHostFragment?

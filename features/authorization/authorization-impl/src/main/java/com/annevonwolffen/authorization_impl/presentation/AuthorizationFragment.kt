@@ -10,6 +10,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.annevonwolffen.authorization_impl.R
+import com.annevonwolffen.design_system.extensions.setStatusBarColor
 
 class AuthorizationFragment : Fragment() {
 
@@ -19,6 +20,8 @@ class AuthorizationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        requireActivity().setStatusBarColor(com.annevonwolffen.design_system.R.color.color_green_300_dark)
 
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.nav_host_fragment_auth) as NavHostFragment? ?: return
