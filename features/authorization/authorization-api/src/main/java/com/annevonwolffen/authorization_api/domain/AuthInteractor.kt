@@ -5,4 +5,5 @@ interface AuthInteractor {
     suspend fun signIn(email: String, password: String): AuthState
     suspend fun signUp(email: String, password: String): AuthState
     suspend fun signOut()
+    fun getUserEmail(): String
 }

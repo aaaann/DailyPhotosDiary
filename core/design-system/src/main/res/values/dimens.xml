@@ -8,6 +8,7 @@
     <!-- paddings end-->
 
     <!-- margins -->
+    <dimen name="margin_small">10dp</dimen>
     <dimen name="margin_medium">16dp</dimen>
 
 

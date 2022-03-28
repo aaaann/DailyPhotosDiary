@@ -6,6 +6,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -17,18 +19,19 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.annevonwolffen.authorization_api.di.AuthorizationApi
+import com.annevonwolffen.authorization_api.domain.AuthInteractor
 import com.annevonwolffen.design_system.extensions.setStatusBarColor
-import com.annevonwolffen.di.FeatureProvider
+import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.mainscreen_api.ToolbarFragment
 import com.annevonwolffen.mainscreen_impl.R
 import com.annevonwolffen.navigation.activityNavController
 import com.annevonwolffen.navigation.navigateSafely
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.launch
+import com.annevonwolffen.design_system.R as DesignR
 import com.annevonwolffen.gallery_api.R as GalleryR
 import com.annevonwolffen.navigation.R as NavigationR
 import com.annevonwolffen.settings_api.R as SettingsR
-import com.annevonwolffen.design_system.R as DesignR
 
 class MainScreenFragment : Fragment(), ToolbarFragment {
 
@@ -36,6 +39,8 @@ class MainScreenFragment : Fragment(), ToolbarFragment {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var drawer: DrawerLayout
     private lateinit var toolbar: Toolbar
+
+    private val authInteractor: AuthInteractor by lazy { getFeature(AuthorizationApi::class).authInteractor }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_main_screen, container, false)
@@ -62,13 +67,18 @@ class MainScreenFragment : Fragment(), ToolbarFragment {
         val sideNavView: NavigationView = view.findViewById(R.id.nav_view)
         sideNavView.setupWithNavController(navController)
 
+        val navHeader = sideNavView.getHeaderView(0)
+        navHeader.findViewById<TextView>(R.id.tv_email).text = authInteractor.getUserEmail()
+        val navHeaderImage = navHeader.findViewById<ImageView>(R.id.iv_header_icon)
+
         sideNavView.setNavigationItemSelectedListener { menuItem ->
             if (menuItem.itemId == R.id.log_out) {
                 viewLifecycleOwner.lifecycleScope.launch {
-                    FeatureProvider.getFeature(AuthorizationApi::class).authInteractor.signOut()
+                    authInteractor.signOut()
                     activityNavController().navigateSafely(NavigationR.id.action_global_authorization)
                 }
             } else {
+                navHeaderImage.setImageDrawable(menuItem.icon)
                 NavigationUI.onNavDestinationSelected(menuItem, navController)
                 drawer.closeDrawer(GravityCompat.START)
             }

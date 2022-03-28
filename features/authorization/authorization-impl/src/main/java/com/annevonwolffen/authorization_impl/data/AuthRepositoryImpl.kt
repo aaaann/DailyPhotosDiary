@@ -49,6 +49,10 @@ class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepositor
         firebaseAuth.signOut()
     }
 
+    override fun getUserEmail(): String {
+        return firebaseAuth.currentUser?.email.orEmpty()
+    }
+
     private companion object {
         const val TAG = "AuthRepository"
     }
