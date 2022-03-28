@@ -3,7 +3,7 @@
     <string name="loading_error">Не удалось загрузить картинки</string>
     <string name="add_image_descr">Описание…</string>
     <string name="add_image_title">Добавить заметку</string>
-    <string name="edit_image_title">Редактировать заметку</string>
+    <string name="edit_image_title">Редактировать</string>
     <string name="save">Сохранить</string>
     <string name="from_camera">Камера</string>
     <string name="from_gallery">Галерея</string>
@@ -12,6 +12,8 @@
     <string name="today">Сегодня</string>
     <string name="delete_image">Удалить</string>
     <string name="sort_by_date">Сортировать по дате</string>
+    <string name="when">Когда?</string>
+    <string name="add_image">Добавить изображение</string>
 
     <string-array name="months_genitive">
         <item>"января"</item>

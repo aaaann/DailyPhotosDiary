@@ -2,6 +2,7 @@
 <resources>
 
     <!-- paddings -->
+    <dimen name="padding_small">10dp</dimen>
     <dimen name="padding_medium">16dp</dimen>
 
     <!-- paddings end-->
@@ -11,5 +12,9 @@
 
 
     <!-- margins end -->
+
+    <!-- icon sizes -->
+    <dimen name="icon_size_default">36dp</dimen>
+    <!-- icon sizes end-->
 
 </resources>

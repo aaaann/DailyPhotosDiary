@@ -114,6 +114,7 @@ class AddImageFragment : Fragment() {
         image?.let {
             description.setText(it.description)
         }
+        viewModel.setFile(null)
         setupDateField()
 
         val addImageButton = binding.btnImage
