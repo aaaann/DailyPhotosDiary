@@ -14,8 +14,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -33,6 +31,7 @@ import com.annevonwolffen.gallery_impl.presentation.viewmodels.GalleryViewModel
 import com.annevonwolffen.mainscreen_api.ToolbarFragment
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
 import com.annevonwolffen.ui_utils_api.extensions.setVisibility
+import com.annevonwolffen.ui_utils_api.viewmodel.ViewModelProviderFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -56,14 +55,12 @@ class GalleryFragment : Fragment() {
     private lateinit var shimmerLayout: LinearLayout
 
     private val viewModel: GalleryViewModel by viewModels {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return GalleryViewModel(
-                    galleryInternalApi.imagesInteractor,
-                    galleryInternalApi.imagesAggregator,
-                    galleryInternalApi.settingsInteractor
-                ) as T
-            } // TODO: create base ViewModelProviderFactory in some core module
+        ViewModelProviderFactory {
+            GalleryViewModel(
+                galleryInternalApi.imagesInteractor,
+                galleryInternalApi.imagesAggregator,
+                galleryInternalApi.settingsInteractor
+            )
         }
     }
 

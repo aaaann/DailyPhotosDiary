@@ -11,8 +11,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -28,6 +26,7 @@ import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.navigation.activityNavController
 import com.annevonwolffen.navigation.navigateSafely
 import com.annevonwolffen.ui_utils_api.extensions.setVisibility
+import com.annevonwolffen.ui_utils_api.viewmodel.ViewModelProviderFactory
 import kotlinx.coroutines.launch
 import com.annevonwolffen.navigation.R as NavigationR
 
@@ -36,10 +35,8 @@ class SignInFragment : Fragment() {
     private lateinit var loadingScreen: FrameLayout
 
     private val viewModel: AuthorizationViewModel by viewModels {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return AuthorizationViewModel(getFeature(AuthorizationApi::class).authInteractor) as T
-            }
+        ViewModelProviderFactory {
+            AuthorizationViewModel(getFeature(AuthorizationApi::class).authInteractor)
         }
     }
 
