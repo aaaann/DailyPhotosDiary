@@ -50,6 +50,7 @@ class GalleryFragment : Fragment() {
 
     private lateinit var adapter: ImagesGroupListAdapter
     private lateinit var recyclerView: RecyclerView
+    private lateinit var adapterDataObserver: RecyclerView.AdapterDataObserver
     private lateinit var errorBanner: View
     private lateinit var addImageButton: FloatingActionButton
     private lateinit var shimmerLayout: LinearLayout
@@ -95,6 +96,13 @@ class GalleryFragment : Fragment() {
         adapter =
             ImagesGroupListAdapter(getFeature(UiUtilsApi::class).imageLoader) { image -> addOrEditImage(image) }
         recyclerView.adapter = adapter
+        adapterDataObserver = object : RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                super.onItemRangeInserted(positionStart, itemCount)
+                recyclerView.scrollToPosition(positionStart)
+            }
+        }
+        adapter.registerAdapterDataObserver(adapterDataObserver)
     }
 
     private fun addOrEditImage(image: Image?) {
@@ -194,6 +202,7 @@ class GalleryFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        recyclerView.adapter?.unregisterAdapterDataObserver(adapterDataObserver)
         _binding = null
     }
 
