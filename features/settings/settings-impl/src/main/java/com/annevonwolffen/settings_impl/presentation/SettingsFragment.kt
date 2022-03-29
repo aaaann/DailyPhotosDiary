@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceFragmentCompat
@@ -15,6 +13,7 @@ import com.annevonwolffen.mainscreen_api.ToolbarFragment
 import com.annevonwolffen.settings_api.SettingsApi
 import com.annevonwolffen.settings_impl.R
 import com.annevonwolffen.settings_impl.di.SettingsInternalApi
+import com.annevonwolffen.ui_utils_api.viewmodel.ViewModelProviderFactory
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -28,13 +27,11 @@ internal class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private val viewModel: SettingsViewModel by activityViewModels {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return SettingsViewModel(
-                    settingsInternalApi.settingsInteractor,
-                    settingsInternalApi.notificationWorkManager
-                ) as T
-            }
+        ViewModelProviderFactory {
+            SettingsViewModel(
+                settingsInternalApi.settingsInteractor,
+                settingsInternalApi.notificationWorkManager
+            )
         }
     }
 
