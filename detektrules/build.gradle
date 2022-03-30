@@ -1,6 +1,4 @@
 plugins {
-    id 'java-library'
-    id 'org.jetbrains.kotlin.jvm'
     id 'kotlin'
 }
 
@@ -11,6 +9,7 @@ java {
 
 dependencies {
     compileOnly "io.gitlab.arturbosch.detekt:detekt-api:$detekt"
+    implementation "io.gitlab.arturbosch.detekt:detekt-cli:$detekt"
 
     testImplementation "io.gitlab.arturbosch.detekt:detekt-api:$detekt"
     testImplementation "io.gitlab.arturbosch.detekt:detekt-test:$detekt"

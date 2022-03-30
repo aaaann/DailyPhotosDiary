@@ -46,6 +46,10 @@ tasks.register("detektAll", Detekt) {
     exclude 'build/'
 }
 
+dependencies {
+    detekt project(':detektrules')
+}
+
 ext {
     targetSdkVersion = 31
     androidJar = androidjar.find(targetSdkVersion)
