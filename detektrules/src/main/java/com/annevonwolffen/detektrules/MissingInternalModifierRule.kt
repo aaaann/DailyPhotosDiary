@@ -6,7 +6,8 @@ import io.gitlab.arturbosch.detekt.api.Entity
 import io.gitlab.arturbosch.detekt.api.Issue
 import io.gitlab.arturbosch.detekt.api.Rule
 import io.gitlab.arturbosch.detekt.api.Severity
-import org.jetbrains.kotlin.com.intellij.lang.jvm.JvmModifier
+import io.gitlab.arturbosch.detekt.rules.isInternal
+import org.jetbrains.kotlin.psi.KtClass
 import org.jetbrains.kotlin.psi.KtFile
 
 class MissingInternalModifierRule : Rule() {
@@ -21,18 +22,18 @@ class MissingInternalModifierRule : Rule() {
     override fun visitKtFile(file: KtFile) {
         super.visitKtFile(file)
         val modulePackageName = file.packageDirective?.packageNames?.get(2)
-        modulePackageName?.name
+        modulePackageName?.getReferencedName()
             // если impl-модуль
             ?.takeIf { it.endsWith("_impl") }
             ?.let {
                 // пройти по всем классам
-                file.classes.forEach {
-                    if (it.hasModifier(JvmModifier.PUBLIC)) {
+                file.findChildrenByClass(KtClass::class.java).forEach {
+                    if (!it.isInternal()) {
                         report(
                             CodeSmell(
                                 issue = issue,
                                 entity = Entity.from(it),
-                                message = "$it $INTERNAL_IMPL_ISSUE_REPORT_MESSAGE"
+                                message = "${it.name} $INTERNAL_IMPL_ISSUE_REPORT_MESSAGE"
                             )
                         )
                     }
