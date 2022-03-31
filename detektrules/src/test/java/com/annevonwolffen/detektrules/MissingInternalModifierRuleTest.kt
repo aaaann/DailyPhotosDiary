@@ -1,5 +1,6 @@
 package com.annevonwolffen.detektrules
 
+import io.gitlab.arturbosch.detekt.api.Finding
 import io.gitlab.arturbosch.detekt.test.assertThat
 import io.gitlab.arturbosch.detekt.test.compileAndLint
 import org.junit.Test
@@ -21,12 +22,37 @@ class MissingInternalModifierRuleTest {
                 suspend fun deleteImage(folder: String, image: Image): Result<Unit>
                 suspend fun deleteFileFromStorage(folder: String, image: Image)
             }
+            
+            object SomeObject {
+            
+                fun someFun() {
+                    return Unit
+                }
+            }
+
+            fun createImageFile(context: Context) {
+                
+            }
+            
+            private fun somePrivateFun(context: Context) {
+                
+            }
+            
+            fun String.extension(): String = ""
+            
+            const val FILE_NAME = ""
+            val globalVal = ""
+
         """.trimIndent()
 
         val findings = MissingInternalModifierRule().compileAndLint(code)
-        assertThat(findings).hasSize(1)
-        assertThat(findings.first()).hasMessage("ImagesInteractor $INTERNAL_IMPL_ISSUE_REPORT_MESSAGE")
-
+        assertThat(findings).hasSize(6)
+        assertFindingMessage(findings[0], "ImagesInteractor")
+        assertFindingMessage(findings[1], "SomeObject")
+        assertFindingMessage(findings[2], "createImageFile")
+        assertFindingMessage(findings[3], "extension")
+        assertFindingMessage(findings[4], "FILE_NAME")
+        assertFindingMessage(findings[5], "globalVal")
     }
 
     @Test
@@ -69,6 +95,10 @@ class MissingInternalModifierRuleTest {
 
         val findings = MissingInternalModifierRule().compileAndLint(code)
         assertThat(findings).hasSize(0)
+    }
+
+    private fun assertFindingMessage(finding: Finding, itemName: String) {
+        assertThat(finding).hasMessage("$itemName $INTERNAL_IMPL_ISSUE_REPORT_MESSAGE")
     }
 
     companion object {

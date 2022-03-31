@@ -6,9 +6,13 @@ import io.gitlab.arturbosch.detekt.api.Entity
 import io.gitlab.arturbosch.detekt.api.Issue
 import io.gitlab.arturbosch.detekt.api.Rule
 import io.gitlab.arturbosch.detekt.api.Severity
-import io.gitlab.arturbosch.detekt.rules.isInternal
 import org.jetbrains.kotlin.psi.KtClass
 import org.jetbrains.kotlin.psi.KtFile
+import org.jetbrains.kotlin.psi.KtModifierListOwner
+import org.jetbrains.kotlin.psi.KtNamedFunction
+import org.jetbrains.kotlin.psi.KtObjectDeclaration
+import org.jetbrains.kotlin.psi.KtProperty
+import org.jetbrains.kotlin.psi.psiUtil.isPublic
 
 class MissingInternalModifierRule : Rule() {
     override val issue: Issue
@@ -26,17 +30,32 @@ class MissingInternalModifierRule : Rule() {
             // если impl-модуль
             ?.takeIf { it.endsWith("_impl") }
             ?.let {
-                // пройти по всем классам
-                file.findChildrenByClass(KtClass::class.java).forEach {
-                    if (!it.isInternal()) {
-                        report(
-                            CodeSmell(
-                                issue = issue,
-                                entity = Entity.from(it),
-                                message = "${it.name} $INTERNAL_IMPL_ISSUE_REPORT_MESSAGE"
-                            )
+
+                val elementsTypes = arrayOf(
+                    KtClass::class.java,
+                    KtObjectDeclaration::class.java,
+                    KtNamedFunction::class.java,
+                    KtProperty::class.java
+                )
+
+                // пройти по всем элементам
+                elementsTypes.forEach {
+                    file.findChildrenByClass(it).reportOnEachIfNeeded()
+                }
+            }
+    }
+
+    private fun <T : Any> Array<T>.reportOnEachIfNeeded() {
+        filterIsInstance<KtModifierListOwner>()
+            .forEach {
+                if (it.isPublic) {
+                    report(
+                        CodeSmell(
+                            issue = issue,
+                            entity = Entity.from(it),
+                            message = "${it.name} $INTERNAL_IMPL_ISSUE_REPORT_MESSAGE"
                         )
-                    }
+                    )
                 }
             }
     }
