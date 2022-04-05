@@ -29,6 +29,8 @@ include ':settings-api'
 include ':settings-impl'
 include ':lint-checks'
 include ':detektrules'
+include ':about-api'
+include ':about-impl'
 
 
 // Set a custom path for the modules.
@@ -52,3 +54,5 @@ project(":preferences-impl").projectDir = new File(rootDir, "core/preferences/pr
 project(":design-system").projectDir = new File(rootDir, "core/design-system")
 project(":settings-api").projectDir = new File(rootDir, "features/settings/settings-api")
 project(":settings-impl").projectDir = new File(rootDir, "features/settings/settings-impl")
+project(":about-api").projectDir = new File(rootDir, "features/about/about-api")
+project(":about-impl").projectDir = new File(rootDir, "features/about/about-impl")

@@ -19,6 +19,17 @@
     </group>
 
     <group
+        android:id="@+id/about_group"
+        android:checkableBehavior="none">
+
+        <item
+            android:id="@id/about_graph"
+            android:icon="@drawable/ic_logout_36"
+            android:title="@string/about" />
+
+    </group>
+
+    <group
         android:id="@+id/additional_items"
         android:checkableBehavior="none">
 

@@ -59,6 +59,8 @@ dependencies {
     implementation project(':design-system')
     implementation project(':settings-impl')
     implementation project(':settings-api')
+    implementation project(':about-api')
+    implementation project(':about-impl')
 
     lintChecks project(':lint-checks')
 

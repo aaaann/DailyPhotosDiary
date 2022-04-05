@@ -6,6 +6,6 @@
 
     <include app:graph="@navigation/settings_graph" />
 
-<!--    <include app:graph="@navigation/authorization_graph" />-->
+    <include app:graph="@navigation/about_graph" />
 
 </navigation>

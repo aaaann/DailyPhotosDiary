@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".AboutFragment"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_medium">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/about" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/content_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        app:cardCornerRadius="8dp">
+
+        <EditText
+            android:id="@+id/et_content"
+            style="@style/Widget.DailyPhotosDiary.EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:hint="@string/add_opinion"
+            android:importantForAutofill="no"
+            android:inputType="textMultiLine|textNoSuggestions|textAutoComplete"
+            android:minHeight="64dp"
+            android:padding="@dimen/padding_small" />
+    </androidx.cardview.widget.CardView>
+
+    <Button
+        android:layout_marginTop="@dimen/margin_medium"
+        android:id="@+id/btn_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Отправить разработчику в Telegram"/>
+
+</LinearLayout>

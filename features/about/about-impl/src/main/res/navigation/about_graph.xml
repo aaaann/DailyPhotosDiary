@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation android:id="@id/about_graph"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/about_fragment">
+
+    <fragment
+        android:id="@id/about_fragment"
+        android:name="com.annevonwolffen.about_impl.AboutFragment"
+        android:label="@string/about" />
+
+</navigation>

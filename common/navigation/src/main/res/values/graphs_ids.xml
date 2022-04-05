@@ -4,4 +4,5 @@
     <item name="main_screen_graph" type="id" />
     <item name="gallery_graph" type="id" />
     <item name="settings_graph" type="id" />
+    <item name="about_graph" type="id" />
 </resources>

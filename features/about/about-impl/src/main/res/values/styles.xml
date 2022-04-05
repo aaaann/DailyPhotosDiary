@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.DailyPhotosDiary.EditText" parent="@style/Widget.AppCompat.EditText">
+        <item name="android:background">@color/color_white</item>
+        <item name="android:textCursorDrawable">@null</item>
+    </style>
+</resources>

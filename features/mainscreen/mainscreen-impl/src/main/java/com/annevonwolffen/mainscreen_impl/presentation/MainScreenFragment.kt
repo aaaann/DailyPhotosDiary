@@ -32,6 +32,7 @@ import com.annevonwolffen.design_system.R as DesignR
 import com.annevonwolffen.gallery_api.R as GalleryR
 import com.annevonwolffen.navigation.R as NavigationR
 import com.annevonwolffen.settings_api.R as SettingsR
+import com.annevonwolffen.about_api.R as AboutR
 
 class MainScreenFragment : Fragment(), ToolbarFragment {
 
@@ -91,7 +92,8 @@ class MainScreenFragment : Fragment(), ToolbarFragment {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 GalleryR.id.gallery_fragment,
-                SettingsR.id.settings_fragment
+                SettingsR.id.settings_fragment,
+                AboutR.id.about_fragment
             ),
             drawer
         )
